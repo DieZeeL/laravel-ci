@@ -6,7 +6,7 @@
     "CI",
     "CodeIgniter"
   ],
-  "license": "GPL",
+  "license": "MIT",
   "authors": [
     {
       "name": "Sergey Kornienko",
