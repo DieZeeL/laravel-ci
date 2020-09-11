@@ -3,11 +3,8 @@
 namespace diezeel\CI;
 
 use Illuminate\Support\ServiceProvider;
-use Nwidart\Modules\Providers\BootstrapServiceProvider;
-use Nwidart\Modules\Providers\ConsoleServiceProvider;
-use Nwidart\Modules\Providers\ContractsServiceProvider;
 
-abstract class LaravelCIServiceProvider extends ServiceProvider
+class CIServiceProvider extends ServiceProvider
 {
     /**
      * Booting the package.

@@ -19,31 +19,21 @@
         "ext-json": "*",
         "laravel/framework": "^8.0"
     },
-    "require-dev": {
-    },
     "autoload": {
         "psr-4": {
-            "diezeel\\ci\\": "src"
+            "diezeel\\CI\\": "src/"
         },
         "files": [
             "src/bootstrap.php"
         ]
     },
-    "autoload-dev": {
-        "psr-4": {
-        }
-    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "laravel": {
             "providers": [
-                "diezeel\\CI\\LaravelCIServiceProvider"
+                "diezeel\\CI\\CIServiceProvider"
             ]
-        },
-        "branch-alias": {
         }
-    },
-    "scripts": {
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }

@@ -1,21 +1,21 @@
 <?php
 const CI_VERSION = '3.1.11';
+$root_path = dirname(dirname(dirname(dirname(__DIR__)))); // Мега костыль!
+$system_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR;
 
-$system_path = dirname(__DIR__). DIRECTORY_SEPARATOR .  'system' . DIRECTORY_SEPARATOR;
-
+define('ENVIRONMENT', 'development');
 // Path to the system directory
 define('BASEPATH', $system_path);
 
 // Path to the front controller (this file) directory
-define('FCPATH', public_path());
+define('FCPATH', $root_path . DIRECTORY_SEPARATOR . 'public');
 
 // Name of the "system" directory
 define('SYSDIR', basename(BASEPATH));
 
-define('APPPATH', app_path("CI"));
+define('APPPATH', $root_path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'CI' . DIRECTORY_SEPARATOR );
 
-define('VIEWPATH', app_path("CI". DIRECTORY_SEPARATOR . 'views') . DIRECTORY_SEPARATOR);
-
+define('VIEWPATH', APPPATH . 'views' . DIRECTORY_SEPARATOR);
 
 
 /*
@@ -87,7 +87,9 @@ $UNI =& load_class('Utf8', 'core');
  *  Instantiate the URI class
  * ------------------------------------------------------
  */
-$URI =& load_class('URI', 'core');
+if(!is_cli()) {
+    $URI =& load_class('URI', 'core');
+}
 
 /*
  * ------------------------------------------------------
@@ -108,7 +110,7 @@ $SEC =& load_class('Security', 'core');
  *  Load the Input class and sanitize globals
  * ------------------------------------------------------
  */
-$IN	=& load_class('Input', 'core');
+$IN =& load_class('Input', 'core');
 
 /*
  * ------------------------------------------------------
@@ -139,7 +141,6 @@ function &get_instance()
     return CI_Controller::get_instance();
 }
 
-if (file_exists(APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php'))
-{
+if (file_exists(APPPATH . 'core/' . $CFG->config['subclass_prefix'] . 'Controller.php')) {
     require_once APPPATH . 'core/' . $CFG->config['subclass_prefix'] . 'Controller.php';
 }
