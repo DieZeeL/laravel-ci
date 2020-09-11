@@ -16,19 +16,19 @@ abstract class LaravelCIServiceProvider extends ServiceProvider
     {
         $configPath = __DIR__ . '/../config';
         $this->publishes([
-            $configPath.'/autoload.php' => config_path('ci/autoload.php'),
-            $configPath.'/config.php' => config_path('ci/config.php'),
-            $configPath.'/constants.php' => config_path('ci/constants.php'),
-            $configPath.'/doctypes.php' => config_path('ci/doctypes.php'),
-            $configPath.'/foreign_chars.php' => config_path('ci/foreign_chars.php'),
-            $configPath.'/hooks.php' => config_path('ci/hooks.php'),
-            $configPath.'/memcached.php' => config_path('ci/memcached.php'),
-            $configPath.'/migration.php' => config_path('ci/migration.php'),
-            $configPath.'/mimes.php' => config_path('ci/mimes.php'),
-            $configPath.'/profiler.php' => config_path('ci/profiler.php'),
-            $configPath.'/routes.php' => config_path('ci/routes.php'),
-            $configPath.'/smileys.php' => config_path('ci/smileys.php'),
-            $configPath.'/user_agents.php' => config_path('ci/user_agents.php'),
+            $configPath.'/autoload.php' => app_path('CI/config/autoload.php'),
+            $configPath.'/config.php' => app_path('CI/config/config.php'),
+            $configPath.'/constants.php' => app_path('CI/config/constants.php'),
+            $configPath.'/doctypes.php' => app_path('CI/config/doctypes.php'),
+            $configPath.'/foreign_chars.php' => app_path('CI/config/foreign_chars.php'),
+            $configPath.'/hooks.php' => app_path('CI/config/hooks.php'),
+            $configPath.'/memcached.php' => app_path('CI/config/memcached.php'),
+            $configPath.'/migration.php' => app_path('CI/config/migration.php'),
+            $configPath.'/mimes.php' => app_path('CI/config/mimes.php'),
+            $configPath.'/profiler.php' => app_path('CI/config/profiler.php'),
+            $configPath.'/routes.php' => app_path('CI/config/routes.php'),
+            $configPath.'/smileys.php' => app_path('CI/config/smileys.php'),
+            $configPath.'/user_agents.php' => app_path('CI/config/user_agents.php'),
         ], 'config');
     }
 
@@ -53,12 +53,10 @@ abstract class LaravelCIServiceProvider extends ServiceProvider
      */
     protected function registerServices()
     {
-        $this->app->singleton(Contracts\CiInterface::class, function ($app) {
-            $path = $app['config']->get('modules.paths.modules');
-
-            return new BootstrapCI($app);
-        });
-        $this->app->alias(Contracts\CiInterface::class, 'ci');
+//        $this->app->singleton(Contracts\CiInterface::class, function ($app) {
+//            return new BootstrapCI($app);
+//        });
+//        $this->app->alias(Contracts\CiInterface::class, 'ci');
     }
 
     /**
@@ -68,7 +66,7 @@ abstract class LaravelCIServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [Contracts\CiInterface::class, 'ci'];
+        //return [Contracts\CiInterface::class, 'ci'];
     }
 
     /**

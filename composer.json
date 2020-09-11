@@ -36,10 +36,7 @@
     "laravel": {
       "providers": [
         "diezeel\\CI\\LaravelCIServiceProvider"
-      ],
-      "aliases": {
-        "ci": "diezeel\\CI\\Facades\\Ci"
-      }
+      ]
     },
     "branch-alias": {
     }
