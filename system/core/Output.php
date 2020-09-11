@@ -90,21 +90,21 @@ class CI_Output {
 	 *
 	 * @var	bool
 	 */
-	public $enable_profiler = FALSE;
+    public $enable_profiler = false;
 
 	/**
 	 * php.ini zlib.output_compression flag
 	 *
 	 * @var	bool
 	 */
-	protected $_zlib_oc = FALSE;
+    protected $_zlib_oc = false;
 
 	/**
 	 * CI output compression flag
 	 *
 	 * @var	bool
 	 */
-	protected $_compress_output = FALSE;
+    protected $_compress_output = false;
 
 	/**
 	 * List of profiler sections
@@ -120,7 +120,7 @@ class CI_Output {
 	 *
 	 * @var	bool
 	 */
-	public $parse_exec_vars = TRUE;
+    public $parse_exec_vars = true;
 
 	/**
 	 * mbstring.func_overload flag
@@ -140,8 +140,8 @@ class CI_Output {
 	{
 		$this->_zlib_oc = (bool) ini_get('zlib.output_compression');
 		$this->_compress_output = (
-			$this->_zlib_oc === FALSE
-			&& config_item('compress_output') === TRUE
+            $this->_zlib_oc === false
+            && config_item('compress_output') === true
 			&& extension_loaded('zlib')
 		);
 
@@ -207,20 +207,19 @@ class CI_Output {
 	 * Lets you set a server header which will be sent with the final output.
 	 *
 	 * Note: If a file is cached, headers will not be sent.
-	 * @todo	We need to figure out how to permit headers to be cached.
-	 *
 	 * @param	string	$header		Header
 	 * @param	bool	$replace	Whether to replace the old header value, if already set
 	 * @return	CI_Output
+     * @todo    We need to figure out how to permit headers to be cached.
+     *
 	 */
-	public function set_header($header, $replace = TRUE)
+    public function set_header($header, $replace = true)
 	{
 		// If zlib.output_compression is enabled it will compress the output,
 		// but it will not modify the content-length header to compensate for
 		// the reduction, causing the browser to hang waiting for more data.
 		// We'll just skip content-length in those cases.
-		if ($this->_zlib_oc && strncasecmp($header, 'content-length', 14) === 0)
-		{
+        if ($this->_zlib_oc && strncasecmp($header, 'content-length', 14) === 0) {
 			return $this;
 		}
 
@@ -237,19 +236,17 @@ class CI_Output {
 	 * @param	string	$charset	Character set (default: NULL)
 	 * @return	CI_Output
 	 */
-	public function set_content_type($mime_type, $charset = NULL)
+    public function set_content_type($mime_type, $charset = null)
 	{
 		if (strpos($mime_type, '/') === FALSE)
 		{
 			$extension = ltrim($mime_type, '.');
 
 			// Is this extension supported?
-			if (isset($this->mimes[$extension]))
-			{
+            if (isset($this->mimes[$extension])) {
 				$mime_type =& $this->mimes[$extension];
 
-				if (is_array($mime_type))
-				{
+                if (is_array($mime_type)) {
 					$mime_type = current($mime_type);
 				}
 			}
@@ -257,15 +254,14 @@ class CI_Output {
 
 		$this->mime_type = $mime_type;
 
-		if (empty($charset))
-		{
+        if (empty($charset)) {
 			$charset = config_item('charset');
 		}
 
 		$header = 'Content-Type: '.$mime_type
 			.(empty($charset) ? '' : '; charset='.$charset);
 
-		$this->headers[] = array($header, TRUE);
+        $this->headers[] = array($header, true);
 		return $this;
 	}
 
@@ -278,10 +274,8 @@ class CI_Output {
 	 */
 	public function get_content_type()
 	{
-		for ($i = 0, $c = count($this->headers); $i < $c; $i++)
-		{
-			if (sscanf($this->headers[$i][0], 'Content-Type: %[^;]', $content_type) === 1)
-			{
+        for ($i = 0, $c = count($this->headers); $i < $c; $i++) {
+            if (sscanf($this->headers[$i][0], 'Content-Type: %[^;]', $content_type) === 1) {
 				return $content_type;
 			}
 		}
@@ -306,21 +300,18 @@ class CI_Output {
 			headers_list()
 		);
 
-		if (empty($headers) OR empty($header))
-		{
-			return NULL;
+        if (empty($headers) OR empty($header)) {
+            return null;
 		}
 
 		// Count backwards, in order to get the last matching header
-		for ($c = count($headers) - 1; $c > -1; $c--)
-		{
-			if (strncasecmp($header, $headers[$c], $l = self::strlen($header)) === 0)
-			{
+        for ($c = count($headers) - 1; $c > -1; $c--) {
+            if (strncasecmp($header, $headers[$c], $l = self::strlen($header)) === 0) {
 				return trim(self::substr($headers[$c], $l+1));
 			}
 		}
 
-		return NULL;
+        return null;
 	}
 
 	// --------------------------------------------------------------------
@@ -349,9 +340,9 @@ class CI_Output {
 	 * @param	bool	$val	TRUE to enable or FALSE to disable
 	 * @return	CI_Output
 	 */
-	public function enable_profiler($val = TRUE)
-	{
-		$this->enable_profiler = is_bool($val) ? $val : TRUE;
+    public function enable_profiler($val = true)
+    {
+        $this->enable_profiler = is_bool($val) ? $val : true;
 		return $this;
 	}
 
@@ -368,15 +359,13 @@ class CI_Output {
 	 */
 	public function set_profiler_sections($sections)
 	{
-		if (isset($sections['query_toggle_count']))
-		{
+        if (isset($sections['query_toggle_count'])) {
 			$this->_profiler_sections['query_toggle_count'] = (int) $sections['query_toggle_count'];
 			unset($sections['query_toggle_count']);
 		}
 
-		foreach ($sections as $section => $enable)
-		{
-			$this->_profiler_sections[$section] = ($enable !== FALSE);
+        foreach ($sections as $section => $enable) {
+            $this->_profiler_sections[$section] = ($enable !== false);
 		}
 
 		return $this;
@@ -421,16 +410,14 @@ class CI_Output {
 		$CFG =& load_class('Config', 'core');
 
 		// Grab the super object if we can.
-		if (class_exists('CI_Controller', FALSE))
-		{
+        if (class_exists('CI_Controller', false)) {
 			$CI =& get_instance();
 		}
 
 		// --------------------------------------------------------------------
 
 		// Set the output data
-		if ($output === '')
-		{
+        if ($output === '') {
 			$output =& $this->final_output;
 		}
 
@@ -461,9 +448,8 @@ class CI_Output {
 
 		// Is compression requested?
 		if (isset($CI) // This means that we're not serving a cache file, if we were, it would already be compressed
-			&& $this->_compress_output === TRUE
-			&& isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
-		{
+            && $this->_compress_output === true
+            && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) {
 			ob_start('ob_gzhandler');
 		}
 
@@ -485,15 +471,12 @@ class CI_Output {
 		// simply echo out the data and exit.
 		if ( ! isset($CI))
 		{
-			if ($this->_compress_output === TRUE)
-			{
-				if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE)
-				{
+            if ($this->_compress_output === true) {
+                if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'],
+                        'gzip') !== false) {
 					header('Content-Encoding: gzip');
 					header('Content-Length: '.self::strlen($output));
-				}
-				else
-				{
+                } else {
 					// User agent doesn't support gzip compression,
 					// so we'll have to decompress our cache
 					$output = gzinflate(self::substr($output, 10, -8));
@@ -510,8 +493,7 @@ class CI_Output {
 
 		// Do we need to generate profile data?
 		// If so, load the Profile class and run it.
-		if ($this->enable_profiler === TRUE)
-		{
+        if ($this->enable_profiler === true) {
 			$CI->load->library('profiler');
 			if ( ! empty($this->_profiler_sections))
 			{
@@ -521,8 +503,7 @@ class CI_Output {
 			// If the output data contains closing </body> and </html> tags
 			// we will remove them and add them back after we insert the profile data
 			$output = preg_replace('|</body>.*?</html>|is', '', $output, -1, $count).$CI->profiler->run();
-			if ($count > 0)
-			{
+            if ($count > 0) {
 				$output .= '</body></html>';
 			}
 		}
@@ -556,8 +537,7 @@ class CI_Output {
 		$path = $CI->config->item('cache_path');
 		$cache_path = ($path === '') ? APPPATH.'cache/' : $path;
 
-		if ( ! is_dir($cache_path) OR ! is_really_writable($cache_path))
-		{
+        if (!is_dir($cache_path) OR !is_really_writable($cache_path)) {
 			log_message('error', 'Unable to write cache file: '.$cache_path);
 			return;
 		}
@@ -566,28 +546,22 @@ class CI_Output {
 			.$CI->config->item('index_page')
 			.$CI->uri->uri_string();
 
-		if (($cache_query_string = $CI->config->item('cache_query_string')) && ! empty($_SERVER['QUERY_STRING']))
-		{
-			if (is_array($cache_query_string))
-			{
+        if (($cache_query_string = $CI->config->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
+            if (is_array($cache_query_string)) {
 				$uri .= '?'.http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
-			}
-			else
-			{
+            } else {
 				$uri .= '?'.$_SERVER['QUERY_STRING'];
 			}
 		}
 
 		$cache_path .= md5($uri);
 
-		if ( ! $fp = @fopen($cache_path, 'w+b'))
-		{
+        if (!$fp = @fopen($cache_path, 'w+b')) {
 			log_message('error', 'Unable to write cache file: '.$cache_path);
 			return;
 		}
 
-		if ( ! flock($fp, LOCK_EX))
-		{
+        if (!flock($fp, LOCK_EX)) {
 			log_message('error', 'Unable to secure a file lock for file at: '.$cache_path);
 			fclose($fp);
 			return;
@@ -596,12 +570,10 @@ class CI_Output {
 		// If output compression is enabled, compress the cache
 		// itself, so that we don't have to do that each time
 		// we're serving it
-		if ($this->_compress_output === TRUE)
-		{
+        if ($this->_compress_output === true) {
 			$output = gzencode($output);
 
-			if ($this->get_header('content-type') === NULL)
-			{
+            if ($this->get_header('content-type') === null) {
 				$this->set_content_type($this->mime_type);
 			}
 		}
@@ -616,10 +588,8 @@ class CI_Output {
 
 		$output = $cache_info.'ENDCI--->'.$output;
 
-		for ($written = 0, $length = self::strlen($output); $written < $length; $written += $result)
-		{
-			if (($result = fwrite($fp, self::substr($output, $written))) === FALSE)
-			{
+        for ($written = 0, $length = self::strlen($output); $written < $length; $written += $result) {
+            if (($result = fwrite($fp, self::substr($output, $written))) === false) {
 				break;
 			}
 		}
@@ -627,8 +597,7 @@ class CI_Output {
 		flock($fp, LOCK_UN);
 		fclose($fp);
 
-		if ( ! is_int($result))
-		{
+        if (!is_int($result)) {
 			@unlink($cache_path);
 			log_message('error', 'Unable to write the complete cache content at: '.$cache_path);
 			return;
@@ -660,22 +629,17 @@ class CI_Output {
 		// Build the file path. The file name is an MD5 hash of the full URI
 		$uri = $CFG->item('base_url').$CFG->item('index_page').$URI->uri_string;
 
-		if (($cache_query_string = $CFG->item('cache_query_string')) && ! empty($_SERVER['QUERY_STRING']))
-		{
-			if (is_array($cache_query_string))
-			{
+        if (($cache_query_string = $CFG->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
+            if (is_array($cache_query_string)) {
 				$uri .= '?'.http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
-			}
-			else
-			{
+            } else {
 				$uri .= '?'.$_SERVER['QUERY_STRING'];
 			}
 		}
 
 		$filepath = $cache_path.md5($uri);
 
-		if ( ! file_exists($filepath) OR ! $fp = @fopen($filepath, 'rb'))
-		{
+        if (!file_exists($filepath) OR !$fp = @fopen($filepath, 'rb')) {
 			return FALSE;
 		}
 
@@ -687,8 +651,7 @@ class CI_Output {
 		fclose($fp);
 
 		// Look for embedded serialized file info.
-		if ( ! preg_match('/^(.*)ENDCI--->/', $cache, $match))
-		{
+        if (!preg_match('/^(.*)ENDCI--->/', $cache, $match)) {
 			return FALSE;
 		}
 
@@ -698,27 +661,25 @@ class CI_Output {
 		$last_modified = filemtime($filepath);
 
 		// Has the file expired?
-		if ($_SERVER['REQUEST_TIME'] >= $expire && is_really_writable($cache_path))
-		{
+        if ($_SERVER['REQUEST_TIME'] >= $expire && is_really_writable($cache_path)) {
 			// If so we'll delete it.
 			@unlink($filepath);
 			log_message('debug', 'Cache file has expired. File deleted.');
-			return FALSE;
+            return false;
 		}
 
 		// Send the HTTP cache control headers
 		$this->set_cache_header($last_modified, $expire);
 
 		// Add headers from cache file.
-		foreach ($cache_info['headers'] as $header)
-		{
+        foreach ($cache_info['headers'] as $header) {
 			$this->set_header($header[0], $header[1]);
 		}
 
 		// Display the cache
 		$this->_display(self::substr($cache, self::strlen($match[0])));
 		log_message('debug', 'Cache file is current. Sending it to browser.');
-		return TRUE;
+        return true;
 	}
 
 	// --------------------------------------------------------------------
@@ -733,29 +694,22 @@ class CI_Output {
 	{
 		$CI =& get_instance();
 		$cache_path = $CI->config->item('cache_path');
-		if ($cache_path === '')
-		{
+        if ($cache_path === '') {
 			$cache_path = APPPATH.'cache/';
 		}
 
-		if ( ! is_dir($cache_path))
-		{
+        if (!is_dir($cache_path)) {
 			log_message('error', 'Unable to find cache path: '.$cache_path);
-			return FALSE;
+            return false;
 		}
 
-		if (empty($uri))
-		{
+        if (empty($uri)) {
 			$uri = $CI->uri->uri_string();
 
-			if (($cache_query_string = $CI->config->item('cache_query_string')) && ! empty($_SERVER['QUERY_STRING']))
-			{
-				if (is_array($cache_query_string))
-				{
+            if (($cache_query_string = $CI->config->item('cache_query_string')) && !empty($_SERVER['QUERY_STRING'])) {
+                if (is_array($cache_query_string)) {
 					$uri .= '?'.http_build_query(array_intersect_key($_GET, array_flip($cache_query_string)));
-				}
-				else
-				{
+                } else {
 					$uri .= '?'.$_SERVER['QUERY_STRING'];
 				}
 			}
@@ -763,13 +717,12 @@ class CI_Output {
 
 		$cache_path .= md5($CI->config->item('base_url').$CI->config->item('index_page').ltrim($uri, '/'));
 
-		if ( ! @unlink($cache_path))
-		{
+        if (!@unlink($cache_path)) {
 			log_message('error', 'Unable to delete cache file for '.$uri);
-			return FALSE;
+            return false;
 		}
 
-		return TRUE;
+        return true;
 	}
 
 	// --------------------------------------------------------------------
@@ -788,8 +741,7 @@ class CI_Output {
 	{
 		$max_age = $expiration - $_SERVER['REQUEST_TIME'];
 
-		if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $last_modified <= strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']))
-		{
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $last_modified <= strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
 			$this->set_status_header(304);
 			exit;
 		}
@@ -825,10 +777,9 @@ class CI_Output {
 	 * @param	int	$length
 	 * @return	string
 	 */
-	protected static function substr($str, $start, $length = NULL)
-	{
-		if (self::$func_overload)
-		{
+    protected static function substr($str, $start, $length = null)
+    {
+        if (self::$func_overload) {
 			// mb_substr($str, $start, null, '8bit') returns an empty
 			// string on PHP 5.3
 			isset($length) OR $length = ($start >= 0 ? self::strlen($str) - $start : -$start);

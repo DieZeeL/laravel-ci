@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 2.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 2.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -53,8 +53,8 @@ class CI_Cache_dummy extends CI_Driver {
 	 *
 	 * Since this is the dummy class, it's always going to return FALSE.
 	 *
-	 * @param	string
-	 * @return	bool	FALSE
+     * @param string
+     * @return    bool    FALSE
 	 */
 	public function get($id)
 	{
@@ -66,13 +66,13 @@ class CI_Cache_dummy extends CI_Driver {
 	/**
 	 * Cache Save
 	 *
-	 * @param	string	Unique Key
-	 * @param	mixed	Data to store
-	 * @param	int	Length of time (in seconds) to cache the data
-	 * @param	bool	Whether to store the raw value
-	 * @return	bool	TRUE, Simulating success
+     * @param string    Unique Key
+     * @param mixed    Data to store
+     * @param int    Length of time (in seconds) to cache the data
+     * @param bool    Whether to store the raw value
+     * @return    bool    TRUE, Simulating success
 	 */
-	public function save($id, $data, $ttl = 60, $raw = FALSE)
+    public function save($id, $data, $ttl = 60, $raw = false)
 	{
 		return TRUE;
 	}
@@ -82,8 +82,8 @@ class CI_Cache_dummy extends CI_Driver {
 	/**
 	 * Delete from Cache
 	 *
-	 * @param	mixed	unique identifier of the item in the cache
-	 * @return	bool	TRUE, simulating success
+     * @param mixed    unique identifier of the item in the cache
+     * @return    bool    TRUE, simulating success
 	 */
 	public function delete($id)
 	{
@@ -92,38 +92,38 @@ class CI_Cache_dummy extends CI_Driver {
 
 	// ------------------------------------------------------------------------
 
-	/**
-	 * Increment a raw value
-	 *
-	 * @param	string	$id	Cache ID
-	 * @param	int	$offset	Step/value to add
-	 * @return	mixed	New value on success or FALSE on failure
-	 */
-	public function increment($id, $offset = 1)
-	{
-		return TRUE;
-	}
+    /**
+     * Increment a raw value
+     *
+     * @param string $id Cache ID
+     * @param int $offset Step/value to add
+     * @return    mixed    New value on success or FALSE on failure
+     */
+    public function increment($id, $offset = 1)
+    {
+        return true;
+    }
 
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
-	/**
-	 * Decrement a raw value
-	 *
-	 * @param	string	$id	Cache ID
-	 * @param	int	$offset	Step/value to reduce by
-	 * @return	mixed	New value on success or FALSE on failure
-	 */
-	public function decrement($id, $offset = 1)
-	{
-		return TRUE;
-	}
+    /**
+     * Decrement a raw value
+     *
+     * @param string $id Cache ID
+     * @param int $offset Step/value to reduce by
+     * @return    mixed    New value on success or FALSE on failure
+     */
+    public function decrement($id, $offset = 1)
+    {
+        return true;
+    }
 
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
 	/**
 	 * Clean the cache
 	 *
-	 * @return	bool	TRUE, simulating success
+     * @return    bool    TRUE, simulating success
 	 */
 	public function clean()
 	{
@@ -135,8 +135,8 @@ class CI_Cache_dummy extends CI_Driver {
 	/**
 	 * Cache Info
 	 *
-	 * @param	string	user/filehits
-	 * @return	bool	FALSE
+     * @param string    user/filehits
+     * @return    bool    FALSE
 	 */
 	 public function cache_info($type = NULL)
 	 {
@@ -148,8 +148,8 @@ class CI_Cache_dummy extends CI_Driver {
 	/**
 	 * Get Cache Metadata
 	 *
-	 * @param	mixed	key to get cache metadata on
-	 * @return	bool	FALSE
+     * @param mixed    key to get cache metadata on
+     * @return    bool    FALSE
 	 */
 	public function get_metadata($id)
 	{
@@ -162,7 +162,7 @@ class CI_Cache_dummy extends CI_Driver {
 	 * Is this caching driver supported on the system?
 	 * Of course this one is.
 	 *
-	 * @return	bool	TRUE
+     * @return    bool    TRUE
 	 */
 	public function is_supported()
 	{

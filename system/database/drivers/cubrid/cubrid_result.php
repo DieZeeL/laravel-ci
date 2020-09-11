@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 2.1.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 2.1.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -44,20 +44,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @category	Database
  * @author		Esen Sagynov
- * @link		https://codeigniter.com/user_guide/database/
+ * @link        https://codeigniter.com/user_guide/database/
  */
 class CI_DB_cubrid_result extends CI_DB_result {
 
 	/**
 	 * Number of rows in the result set
 	 *
-	 * @return	int
+     * @return    int
 	 */
-	public function num_rows()
-	{
-		return is_int($this->num_rows)
-			? $this->num_rows
-			: $this->num_rows = cubrid_num_rows($this->result_id);
+    public function num_rows()
+    {
+        return is_int($this->num_rows)
+            ? $this->num_rows
+            : $this->num_rows = cubrid_num_rows($this->result_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -65,11 +65,11 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	/**
 	 * Number of fields in the result set
 	 *
-	 * @return	int
+     * @return    int
 	 */
-	public function num_fields()
-	{
-		return cubrid_num_fields($this->result_id);
+    public function num_fields()
+    {
+        return cubrid_num_fields($this->result_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -81,7 +81,7 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	 *
 	 * @return	array
 	 */
-	public function list_fields()
+    public function list_fields()
 	{
 		return cubrid_column_names($this->result_id);
 	}
@@ -95,17 +95,16 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	 *
 	 * @return	array
 	 */
-	public function field_data()
+    public function field_data()
 	{
 		$retval = array();
 
-		for ($i = 0, $c = $this->num_fields(); $i < $c; $i++)
-		{
-			$retval[$i]			= new stdClass();
-			$retval[$i]->name		= cubrid_field_name($this->result_id, $i);
-			$retval[$i]->type		= cubrid_field_type($this->result_id, $i);
-			$retval[$i]->max_length		= cubrid_field_len($this->result_id, $i);
-			$retval[$i]->primary_key	= (int) (strpos(cubrid_field_flags($this->result_id, $i), 'primary_key') !== FALSE);
+        for ($i = 0, $c = $this->num_fields(); $i < $c; $i++) {
+            $retval[$i] = new stdClass();
+            $retval[$i]->name = cubrid_field_name($this->result_id, $i);
+            $retval[$i]->type = cubrid_field_type($this->result_id, $i);
+            $retval[$i]->max_length = cubrid_field_len($this->result_id, $i);
+            $retval[$i]->primary_key = (int)(strpos(cubrid_field_flags($this->result_id, $i), 'primary_key') !== false);
 		}
 
 		return $retval;
@@ -116,12 +115,13 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	/**
 	 * Free the result
 	 *
-	 * @return	void
+     * @return    void
 	 */
-	public function free_result()
-	{
-		if (is_resource($this->result_id) OR
-			(get_resource_type($this->result_id) === 'Unknown' && preg_match('/Resource id #/', strval($this->result_id))))
+    public function free_result()
+    {
+        if (is_resource($this->result_id) OR
+            (get_resource_type($this->result_id) === 'Unknown' && preg_match('/Resource id #/',
+                    strval($this->result_id))))
 		{
 			cubrid_close_request($this->result_id);
 			$this->result_id = FALSE;
@@ -135,12 +135,12 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	 *
 	 * Moves the internal pointer to the desired offset. We call
 	 * this internally before fetching results to make sure the
-	 * result set starts at zero.
-	 *
-	 * @param	int	$n
-	 * @return	bool
+     * result set starts at zero.
+     *
+     * @param int $n
+     * @return    bool
 	 */
-	public function data_seek($n = 0)
+    public function data_seek($n = 0)
 	{
 		return cubrid_data_seek($this->result_id, $n);
 	}
@@ -154,7 +154,7 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	 *
 	 * @return	array
 	 */
-	protected function _fetch_assoc()
+    protected function _fetch_assoc()
 	{
 		return cubrid_fetch_assoc($this->result_id);
 	}
@@ -166,12 +166,12 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	 *
 	 * Returns the result set as an object
 	 *
-	 * @param	string	$class_name
+     * @param string $class_name
 	 * @return	object
 	 */
-	protected function _fetch_object($class_name = 'stdClass')
-	{
-		return cubrid_fetch_object($this->result_id, $class_name);
+    protected function _fetch_object($class_name = 'stdClass')
+    {
+        return cubrid_fetch_object($this->result_id, $class_name);
 	}
 
 }

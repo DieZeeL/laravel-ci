@@ -100,4 +100,11 @@ class CI_Controller {
 		return self::$instance;
 	}
 
+    /**
+     * @param object $instance
+     */
+    public static function setInstance(object $instance): void
+    {
+        self::$instance = $instance;
+    }
 }

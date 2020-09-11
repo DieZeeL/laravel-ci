@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 1.0.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -46,58 +46,57 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Libraries
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/libraries/encryption.html
+ * @link        https://codeigniter.com/user_guide/libraries/encryption.html
  */
 class CI_Encrypt {
 
-	/**
-	 * Reference to the user's encryption key
-	 *
-	 * @var string
-	 */
-	public $encryption_key		= '';
+    /**
+     * Reference to the user's encryption key
+     *
+     * @var string
+     */
+    public $encryption_key = '';
 
 	/**
-	 * Type of hash operation
-	 *
-	 * @var string
-	 */
-	protected $_hash_type		= 'sha1';
+     * Type of hash operation
+     *
+     * @var string
+     */
+    protected $_hash_type = 'sha1';
 
-	/**
-	 * Flag for the existence of mcrypt
-	 *
-	 * @var bool
-	 */
-	protected $_mcrypt_exists	= FALSE;
+    /**
+     * Flag for the existence of mcrypt
+     *
+     * @var bool
+     */
+    protected $_mcrypt_exists = false;
 
-	/**
-	 * Current cipher to be used with mcrypt
-	 *
-	 * @var string
-	 */
-	protected $_mcrypt_cipher;
+    /**
+     * Current cipher to be used with mcrypt
+     *
+     * @var string
+     */
+    protected $_mcrypt_cipher;
 
-	/**
-	 * Method for encrypting/decrypting data
-	 *
-	 * @var int
-	 */
-	protected $_mcrypt_mode;
+    /**
+     * Method for encrypting/decrypting data
+     *
+     * @var int
+     */
+    protected $_mcrypt_mode;
 
-	/**
-	 * Initialize Encryption class
-	 *
-	 * @return	void
-	 */
+    /**
+     * Initialize Encryption class
+     *
+     * @return    void
+     */
 	public function __construct()
 	{
-		if (($this->_mcrypt_exists = function_exists('mcrypt_encrypt')) === FALSE)
-		{
-			show_error('The Encrypt library requires the Mcrypt extension.');
-		}
+        if (($this->_mcrypt_exists = function_exists('mcrypt_encrypt')) === false) {
+            show_error('The Encrypt library requires the Mcrypt extension.');
+        }
 
-		log_message('info', 'Encrypt Class Initialized');
+        log_message('info', 'Encrypt Class Initialized');
 	}
 
 	// --------------------------------------------------------------------
@@ -111,18 +110,17 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	public function get_key($key = '')
-	{
-		if ($key === '')
-		{
-			if ($this->encryption_key !== '')
+    public function get_key($key = '')
+    {
+        if ($key === '') {
+            if ($this->encryption_key !== '')
 			{
 				return $this->encryption_key;
 			}
 
-			$key = config_item('encryption_key');
+            $key = config_item('encryption_key');
 
-			if ( ! self::strlen($key))
+            if (!self::strlen($key))
 			{
 				show_error('In order to use the encryption class requires that you set an encryption key in your config file.');
 			}
@@ -137,12 +135,12 @@ class CI_Encrypt {
 	 * Set the encryption key
 	 *
 	 * @param	string
-	 * @return	CI_Encrypt
+     * @return    CI_Encrypt
 	 */
-	public function set_key($key = '')
+    public function set_key($key = '')
 	{
 		$this->encryption_key = $key;
-		return $this;
+        return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -162,9 +160,9 @@ class CI_Encrypt {
 	 * @param	string	the key
 	 * @return	string
 	 */
-	public function encode($string, $key = '')
-	{
-		return base64_encode($this->mcrypt_encode($string, $this->get_key($key)));
+    public function encode($string, $key = '')
+    {
+        return base64_encode($this->mcrypt_encode($string, $this->get_key($key)));
 	}
 
 	// --------------------------------------------------------------------
@@ -178,14 +176,14 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	public function decode($string, $key = '')
-	{
-		if (preg_match('/[^a-zA-Z0-9\/\+=]/', $string) OR base64_encode(base64_decode($string)) !== $string)
+    public function decode($string, $key = '')
+    {
+        if (preg_match('/[^a-zA-Z0-9\/\+=]/', $string) OR base64_encode(base64_decode($string)) !== $string)
 		{
 			return FALSE;
 		}
 
-		return $this->mcrypt_decode(base64_decode($string), $this->get_key($key));
+        return $this->mcrypt_decode(base64_decode($string), $this->get_key($key));
 	}
 
 	// --------------------------------------------------------------------
@@ -198,19 +196,18 @@ class CI_Encrypt {
 	 * This allows for backwards compatibility and a method to transition to the
 	 * new encryption algorithms.
 	 *
-	 * For more details, see https://codeigniter.com/user_guide/installation/upgrade_200.html#encryption
+     * For more details, see https://codeigniter.com/user_guide/installation/upgrade_200.html#encryption
 	 *
 	 * @param	string
 	 * @param	int		(mcrypt mode constant)
 	 * @param	string
 	 * @return	string
 	 */
-	public function encode_from_legacy($string, $legacy_mode = MCRYPT_MODE_ECB, $key = '')
-	{
-		if (preg_match('/[^a-zA-Z0-9\/\+=]/', $string))
-		{
-			return FALSE;
-		}
+    public function encode_from_legacy($string, $legacy_mode = MCRYPT_MODE_ECB, $key = '')
+    {
+        if (preg_match('/[^a-zA-Z0-9\/\+=]/', $string)) {
+            return false;
+        }
 
 		// decode it first
 		// set mode temporarily to what it was when string was encoded with the legacy
@@ -222,7 +219,7 @@ class CI_Encrypt {
 		$dec = base64_decode($string);
 		if (($dec = $this->mcrypt_decode($dec, $key)) === FALSE)
 		{
-			$this->set_mode($current_mode);
+            $this->set_mode($current_mode);
 			return FALSE;
 		}
 
@@ -247,14 +244,13 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	protected function _xor_decode($string, $key)
+    protected function _xor_decode($string, $key)
 	{
 		$string = $this->_xor_merge($string, $key);
 
 		$dec = '';
-		for ($i = 0, $l = self::strlen($string); $i < $l; $i++)
-		{
-			$dec .= ($string[$i++] ^ $string[$i]);
+        for ($i = 0, $l = self::strlen($string); $i < $l; $i++) {
+            $dec .= ($string[$i++] ^ $string[$i]);
 		}
 
 		return $dec;
@@ -271,14 +267,13 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	protected function _xor_merge($string, $key)
+    protected function _xor_merge($string, $key)
 	{
 		$hash = $this->hash($key);
 		$str = '';
 
-		for ($i = 0, $ls = self::strlen($string), $lh = self::strlen($hash); $i < $ls; $i++)
-		{
-			$str .= $string[$i] ^ $hash[($i % $lh)];
+        for ($i = 0, $ls = self::strlen($string), $lh = self::strlen($hash); $i < $ls; $i++) {
+            $str .= $string[$i] ^ $hash[($i % $lh)];
 		}
 
 		return $str;
@@ -293,11 +288,12 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	public function mcrypt_encode($data, $key)
-	{
-		$init_size = mcrypt_get_iv_size($this->_get_cipher(), $this->_get_mode());
-		$init_vect = mcrypt_create_iv($init_size, MCRYPT_DEV_URANDOM);
-		return $this->_add_cipher_noise($init_vect.mcrypt_encrypt($this->_get_cipher(), $key, $data, $this->_get_mode(), $init_vect), $key);
+    public function mcrypt_encode($data, $key)
+    {
+        $init_size = mcrypt_get_iv_size($this->_get_cipher(), $this->_get_mode());
+        $init_vect = mcrypt_create_iv($init_size, MCRYPT_DEV_URANDOM);
+        return $this->_add_cipher_noise($init_vect . mcrypt_encrypt($this->_get_cipher(), $key, $data,
+                $this->_get_mode(), $init_vect), $key);
 	}
 
 	// --------------------------------------------------------------------
@@ -309,20 +305,19 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	public function mcrypt_decode($data, $key)
+    public function mcrypt_decode($data, $key)
 	{
 		$data = $this->_remove_cipher_noise($data, $key);
-		$init_size = mcrypt_get_iv_size($this->_get_cipher(), $this->_get_mode());
+        $init_size = mcrypt_get_iv_size($this->_get_cipher(), $this->_get_mode());
 
-		if ($init_size > self::strlen($data))
-		{
-			return FALSE;
-		}
+        if ($init_size > self::strlen($data)) {
+            return false;
+        }
 
-		$init_vect = self::substr($data, 0, $init_size);
-		$data      = self::substr($data, $init_size);
+        $init_vect = self::substr($data, 0, $init_size);
+        $data = self::substr($data, $init_size);
 
-		return rtrim(mcrypt_decrypt($this->_get_cipher(), $key, $data, $this->_get_mode(), $init_vect), "\0");
+        return rtrim(mcrypt_decrypt($this->_get_cipher(), $key, $data, $this->_get_mode(), $init_vect), "\0");
 	}
 
 	// --------------------------------------------------------------------
@@ -336,19 +331,18 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	protected function _add_cipher_noise($data, $key)
-	{
-		$key = $this->hash($key);
+    protected function _add_cipher_noise($data, $key)
+    {
+        $key = $this->hash($key);
 		$str = '';
 
-		for ($i = 0, $j = 0, $ld = self::strlen($data), $lk = self::strlen($key); $i < $ld; ++$i, ++$j)
-		{
-			if ($j >= $lk)
+        for ($i = 0, $j = 0, $ld = self::strlen($data), $lk = self::strlen($key); $i < $ld; ++$i, ++$j) {
+            if ($j >= $lk)
 			{
 				$j = 0;
 			}
 
-			$str .= chr((ord($data[$i]) + ord($key[$j])) % 256);
+            $str .= chr((ord($data[$i]) + ord($key[$j])) % 256);
 		}
 
 		return $str;
@@ -362,27 +356,26 @@ class CI_Encrypt {
 	 *
 	 * Function description
 	 *
-	 * @param	string	$data
-	 * @param	string	$key
-	 * @return	string
+     * @param string $data
+     * @param string $key
+     * @return    string
 	 */
-	protected function _remove_cipher_noise($data, $key)
-	{
-		$key = $this->hash($key);
+    protected function _remove_cipher_noise($data, $key)
+    {
+        $key = $this->hash($key);
 		$str = '';
 
-		for ($i = 0, $j = 0, $ld = self::strlen($data), $lk = self::strlen($key); $i < $ld; ++$i, ++$j)
-		{
-			if ($j >= $lk)
+        for ($i = 0, $j = 0, $ld = self::strlen($data), $lk = self::strlen($key); $i < $ld; ++$i, ++$j) {
+            if ($j >= $lk)
 			{
 				$j = 0;
 			}
 
-			$temp = ord($data[$i]) - ord($key[$j]);
+            $temp = ord($data[$i]) - ord($key[$j]);
 
 			if ($temp < 0)
 			{
-				$temp += 256;
+                $temp += 256;
 			}
 
 			$str .= chr($temp);
@@ -396,13 +389,13 @@ class CI_Encrypt {
 	/**
 	 * Set the Mcrypt Cipher
 	 *
-	 * @param	int
-	 * @return	CI_Encrypt
+     * @param int
+     * @return    CI_Encrypt
 	 */
-	public function set_cipher($cipher)
+    public function set_cipher($cipher)
 	{
 		$this->_mcrypt_cipher = $cipher;
-		return $this;
+        return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -410,13 +403,13 @@ class CI_Encrypt {
 	/**
 	 * Set the Mcrypt Mode
 	 *
-	 * @param	int
-	 * @return	CI_Encrypt
+     * @param int
+     * @return    CI_Encrypt
 	 */
-	public function set_mode($mode)
+    public function set_mode($mode)
 	{
 		$this->_mcrypt_mode = $mode;
-		return $this;
+        return $this;
 	}
 
 	// --------------------------------------------------------------------
@@ -424,13 +417,12 @@ class CI_Encrypt {
 	/**
 	 * Get Mcrypt cipher Value
 	 *
-	 * @return	int
+     * @return    int
 	 */
-	protected function _get_cipher()
-	{
-		if ($this->_mcrypt_cipher === NULL)
-		{
-			return $this->_mcrypt_cipher = MCRYPT_RIJNDAEL_256;
+    protected function _get_cipher()
+    {
+        if ($this->_mcrypt_cipher === null) {
+            return $this->_mcrypt_cipher = MCRYPT_RIJNDAEL_256;
 		}
 
 		return $this->_mcrypt_cipher;
@@ -441,13 +433,12 @@ class CI_Encrypt {
 	/**
 	 * Get Mcrypt Mode Value
 	 *
-	 * @return	int
+     * @return    int
 	 */
-	protected function _get_mode()
-	{
-		if ($this->_mcrypt_mode === NULL)
-		{
-			return $this->_mcrypt_mode = MCRYPT_MODE_CBC;
+    protected function _get_mode()
+    {
+        if ($this->_mcrypt_mode === null) {
+            return $this->_mcrypt_mode = MCRYPT_MODE_CBC;
 		}
 
 		return $this->_mcrypt_mode;
@@ -459,11 +450,11 @@ class CI_Encrypt {
 	 * Set the Hash type
 	 *
 	 * @param	string
-	 * @return	void
+     * @return    void
 	 */
-	public function set_hash($type = 'sha1')
-	{
-		$this->_hash_type = in_array($type, hash_algos()) ? $type : 'sha1';
+    public function set_hash($type = 'sha1')
+    {
+        $this->_hash_type = in_array($type, hash_algos()) ? $type : 'sha1';
 	}
 
 	// --------------------------------------------------------------------
@@ -474,48 +465,47 @@ class CI_Encrypt {
 	 * @param	string
 	 * @return	string
 	 */
-	public function hash($str)
-	{
-		return hash($this->_hash_type, $str);
-	}
+    public function hash($str)
+    {
+        return hash($this->_hash_type, $str);
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Byte-safe strlen()
-	 *
-	 * @param	string	$str
-	 * @return	int
-	 */
-	protected static function strlen($str)
-	{
-		return defined('MB_OVERLOAD_STRING')
-			? mb_strlen($str, '8bit')
-			: strlen($str);
-	}
+    /**
+     * Byte-safe strlen()
+     *
+     * @param string $str
+     * @return    int
+     */
+    protected static function strlen($str)
+    {
+        return defined('MB_OVERLOAD_STRING')
+            ? mb_strlen($str, '8bit')
+            : strlen($str);
+    }
 
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
 
-	/**
-	 * Byte-safe substr()
-	 *
-	 * @param	string	$str
-	 * @param	int	$start
-	 * @param	int	$length
-	 * @return	string
-	 */
-	protected static function substr($str, $start, $length = NULL)
-	{
-		if (defined('MB_OVERLOAD_STRING'))
-		{
-			// mb_substr($str, $start, null, '8bit') returns an empty
-			// string on PHP 5.3
-			isset($length) OR $length = ($start >= 0 ? self::strlen($str) - $start : -$start);
-			return mb_substr($str, $start, $length, '8bit');
-		}
+    /**
+     * Byte-safe substr()
+     *
+     * @param string $str
+     * @param int $start
+     * @param int $length
+     * @return    string
+     */
+    protected static function substr($str, $start, $length = null)
+    {
+        if (defined('MB_OVERLOAD_STRING')) {
+            // mb_substr($str, $start, null, '8bit') returns an empty
+            // string on PHP 5.3
+            isset($length) OR $length = ($start >= 0 ? self::strlen($str) - $start : -$start);
+            return mb_substr($str, $start, $length, '8bit');
+        }
 
-		return isset($length)
-			? substr($str, $start, $length)
-			: substr($str, $start);
-	}
+        return isset($length)
+            ? substr($str, $start, $length)
+            : substr($str, $start);
+    }
 }

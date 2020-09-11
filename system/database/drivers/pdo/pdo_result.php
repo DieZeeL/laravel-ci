@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 2.1.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 2.1.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -42,11 +42,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * This class extends the parent result class: CI_DB_result
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
+ * @package        CodeIgniter
+ * @subpackage    Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/database/
+ * @link        https://codeigniter.com/user_guide/database/
  */
 class CI_DB_pdo_result extends CI_DB_result {
 
@@ -60,21 +60,15 @@ class CI_DB_pdo_result extends CI_DB_result {
 		if (is_int($this->num_rows))
 		{
 			return $this->num_rows;
-		}
-		elseif (count($this->result_array) > 0)
-		{
-			return $this->num_rows = count($this->result_array);
-		}
-		elseif (count($this->result_object) > 0)
-		{
-			return $this->num_rows = count($this->result_object);
-		}
-		elseif (($num_rows = $this->result_id->rowCount()) > 0)
-		{
-			return $this->num_rows = $num_rows;
+        } elseif (count($this->result_array) > 0) {
+            return $this->num_rows = count($this->result_array);
+        } elseif (count($this->result_object) > 0) {
+            return $this->num_rows = count($this->result_object);
+        } elseif (($num_rows = $this->result_id->rowCount()) > 0) {
+            return $this->num_rows = $num_rows;
 		}
 
-		return $this->num_rows = count($this->result_array());
+        return $this->num_rows = count($this->result_array());
 	}
 
 	// --------------------------------------------------------------------
@@ -82,9 +76,9 @@ class CI_DB_pdo_result extends CI_DB_result {
 	/**
 	 * Number of fields in the result set
 	 *
-	 * @return	int
+     * @return    int
 	 */
-	public function num_fields()
+    public function num_fields()
 	{
 		return $this->result_id->columnCount();
 	}
@@ -96,20 +90,19 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 *
 	 * Generates an array of column names
 	 *
-	 * @return	bool
+     * @return    bool
 	 */
-	public function list_fields()
-	{
-		$field_names = array();
-		for ($i = 0, $c = $this->num_fields(); $i < $c; $i++)
-		{
-			// Might trigger an E_WARNING due to not all subdrivers
-			// supporting getColumnMeta()
-			$field_names[$i] = @$this->result_id->getColumnMeta($i);
-			$field_names[$i] = $field_names[$i]['name'];
-		}
+    public function list_fields()
+    {
+        $field_names = array();
+        for ($i = 0, $c = $this->num_fields(); $i < $c; $i++) {
+            // Might trigger an E_WARNING due to not all subdrivers
+            // supporting getColumnMeta()
+            $field_names[$i] = @$this->result_id->getColumnMeta($i);
+            $field_names[$i] = $field_names[$i]['name'];
+        }
 
-		return $field_names;
+        return $field_names;
 	}
 
 	// --------------------------------------------------------------------
@@ -121,30 +114,31 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 *
 	 * @return	array
 	 */
-	public function field_data()
+    public function field_data()
 	{
 		try
 		{
-			$retval = array();
+            $retval = array();
 
-			for ($i = 0, $c = $this->num_fields(); $i < $c; $i++)
+            for ($i = 0, $c = $this->num_fields(); $i < $c; $i++)
 			{
-				$field = $this->result_id->getColumnMeta($i);
+                $field = $this->result_id->getColumnMeta($i);
 
-				$retval[$i]			= new stdClass();
-				$retval[$i]->name		= $field['name'];
-				$retval[$i]->type		= isset($field['native_type']) ? $field['native_type'] : null;
-				$retval[$i]->max_length		= ($field['len'] > 0) ? $field['len'] : NULL;
-				$retval[$i]->primary_key	= (int) ( ! empty($field['flags']) && in_array('primary_key', $field['flags'], TRUE));
+                $retval[$i] = new stdClass();
+                $retval[$i]->name = $field['name'];
+                $retval[$i]->type = isset($field['native_type']) ? $field['native_type'] : null;
+                $retval[$i]->max_length = ($field['len'] > 0) ? $field['len'] : null;
+                $retval[$i]->primary_key = (int)(!empty($field['flags']) && in_array('primary_key', $field['flags'],
+                        true));
 			}
 
-			return $retval;
+            return $retval;
 		}
 		catch (Exception $e)
 		{
 			if ($this->db->db_debug)
 			{
-				return $this->db->display_error('db_unsupported_feature');
+                return $this->db->display_error('db_unsupported_feature');
 			}
 
 			return FALSE;
@@ -156,9 +150,9 @@ class CI_DB_pdo_result extends CI_DB_result {
 	/**
 	 * Free the result
 	 *
-	 * @return	void
+     * @return    void
 	 */
-	public function free_result()
+    public function free_result()
 	{
 		if (is_object($this->result_id))
 		{
@@ -175,7 +169,7 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 *
 	 * @return	array
 	 */
-	protected function _fetch_assoc()
+    protected function _fetch_assoc()
 	{
 		return $this->result_id->fetch(PDO::FETCH_ASSOC);
 	}
@@ -187,12 +181,12 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 *
 	 * Returns the result set as an object
 	 *
-	 * @param	string	$class_name
+     * @param string $class_name
 	 * @return	object
 	 */
-	protected function _fetch_object($class_name = 'stdClass')
-	{
-		return $this->result_id->fetchObject($class_name);
+    protected function _fetch_object($class_name = 'stdClass')
+    {
+        return $this->result_id->fetchObject($class_name);
 	}
 
 }

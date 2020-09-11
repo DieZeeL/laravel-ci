@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 1.0.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -44,48 +44,48 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Parser
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/libraries/parser.html
+ * @link        https://codeigniter.com/user_guide/libraries/parser.html
  */
 class CI_Parser {
 
-	/**
-	 * Left delimiter character for pseudo vars
-	 *
-	 * @var string
-	 */
-	public $l_delim = '{';
+    /**
+     * Left delimiter character for pseudo vars
+     *
+     * @var string
+     */
+    public $l_delim = '{';
+
+    /**
+     * Right delimiter character for pseudo vars
+     *
+     * @var string
+     */
+    public $r_delim = '}';
+
+    /**
+     * Reference to CodeIgniter instance
+     *
+     * @var object
+     */
+    protected $CI;
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Class constructor
+     *
+     * @return    void
+     */
+    public function __construct()
+    {
+        $this->CI =& get_instance();
+        log_message('info', 'Parser Class Initialized');
+    }
+
+    // --------------------------------------------------------------------
 
 	/**
-	 * Right delimiter character for pseudo vars
-	 *
-	 * @var string
-	 */
-	public $r_delim = '}';
-
-	/**
-	 * Reference to CodeIgniter instance
-	 *
-	 * @var object
-	 */
-	protected $CI;
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Class constructor
-	 *
-	 * @return	void
-	 */
-	public function __construct()
-	{
-		$this->CI =& get_instance();
-		log_message('info', 'Parser Class Initialized');
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Parse a template
+     * Parse a template
 	 *
 	 * Parses pseudo-variables contained in the specified template view,
 	 * replacing them with the data in the second param
@@ -97,7 +97,7 @@ class CI_Parser {
 	 */
 	public function parse($template, $data, $return = FALSE)
 	{
-		$template = $this->CI->load->view($template, $data, TRUE);
+        $template = $this->CI->load->view($template, $data, true);
 
 		return $this->_parse($template, $data, $return);
 	}
@@ -105,7 +105,7 @@ class CI_Parser {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Parse a String
+     * Parse a String
 	 *
 	 * Parses pseudo-variables contained in the specified string,
 	 * replacing them with the data in the second param
@@ -115,7 +115,7 @@ class CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	public function parse_string($template, $data, $return = FALSE)
+    public function parse_string($template, $data, $return = false)
 	{
 		return $this->_parse($template, $data, $return);
 	}
@@ -123,7 +123,7 @@ class CI_Parser {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Parse a template
+     * Parse a template
 	 *
 	 * Parses pseudo-variables contained in the specified template,
 	 * replacing them with the data in the second param
@@ -133,30 +133,29 @@ class CI_Parser {
 	 * @param	bool
 	 * @return	string
 	 */
-	protected function _parse($template, $data, $return = FALSE)
-	{
-		if ($template === '')
+    protected function _parse($template, $data, $return = false)
+    {
+        if ($template === '')
 		{
 			return FALSE;
 		}
 
-		$replace = array();
+        $replace = array();
 		foreach ($data as $key => $val)
 		{
-			$replace = array_merge(
-				$replace,
-				is_array($val)
-					? $this->_parse_pair($key, $val, $template)
-					: $this->_parse_single($key, (string) $val, $template)
-			);
-		}
+            $replace = array_merge(
+                $replace,
+                is_array($val)
+                    ? $this->_parse_pair($key, $val, $template)
+                    : $this->_parse_single($key, (string)$val, $template)
+            );
+        }
 
-		unset($data);
-		$template = strtr($template, $replace);
+        unset($data);
+        $template = strtr($template, $replace);
 
-		if ($return === FALSE)
-		{
-			$this->CI->output->append_output($template);
+        if ($return === false) {
+            $this->CI->output->append_output($template);
 		}
 
 		return $template;
@@ -165,13 +164,13 @@ class CI_Parser {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Set the left/right variable delimiters
+     * Set the left/right variable delimiters
 	 *
 	 * @param	string
 	 * @param	string
 	 * @return	void
 	 */
-	public function set_delimiters($l = '{', $r = '}')
+    public function set_delimiters($l = '{', $r = '}')
 	{
 		$this->l_delim = $l;
 		$this->r_delim = $r;
@@ -180,69 +179,64 @@ class CI_Parser {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Parse a single key/value
+     * Parse a single key/value
 	 *
 	 * @param	string
 	 * @param	string
 	 * @param	string
 	 * @return	string
 	 */
-	protected function _parse_single($key, $val, $string)
-	{
-		return array($this->l_delim.$key.$this->r_delim => (string) $val);
+    protected function _parse_single($key, $val, $string)
+    {
+        return array($this->l_delim . $key . $this->r_delim => (string)$val);
 	}
 
 	// --------------------------------------------------------------------
 
 	/**
-	 * Parse a tag pair
-	 *
-	 * Parses tag pairs: {some_tag} string... {/some_tag}
+     * Parse a tag pair
+     *
+     * Parses tag pairs: {some_tag} string... {/some_tag}
 	 *
 	 * @param	string
 	 * @param	array
 	 * @param	string
 	 * @return	string
 	 */
-	protected function _parse_pair($variable, $data, $string)
-	{
-		$replace = array();
-		preg_match_all(
-			'#'.preg_quote($this->l_delim.$variable.$this->r_delim).'(.+?)'.preg_quote($this->l_delim.'/'.$variable.$this->r_delim).'#s',
-			$string,
-			$matches,
-			PREG_SET_ORDER
-		);
+    protected function _parse_pair($variable, $data, $string)
+    {
+        $replace = array();
+        preg_match_all(
+            '#' . preg_quote($this->l_delim . $variable . $this->r_delim) . '(.+?)' . preg_quote($this->l_delim . '/' . $variable . $this->r_delim) . '#s',
+            $string,
+            $matches,
+            PREG_SET_ORDER
+        );
 
-		foreach ($matches as $match)
-		{
-			$str = '';
-			foreach ($data as $row)
-			{
-				$temp = array();
-				foreach ($row as $key => $val)
-				{
-					if (is_array($val))
-					{
-						$pair = $this->_parse_pair($key, $val, $match[1]);
-						if ( ! empty($pair))
-						{
-							$temp = array_merge($temp, $pair);
-						}
+        foreach ($matches as $match) {
+            $str = '';
+            foreach ($data as $row) {
+                $temp = array();
+                foreach ($row as $key => $val) {
+                    if (is_array($val)) {
+                        $pair = $this->_parse_pair($key, $val, $match[1]);
+                        if (!empty($pair)) {
+                            $temp = array_merge($temp, $pair);
+                        }
 
-						continue;
-					}
+                        continue;
+                    }
 
-					$temp[$this->l_delim.$key.$this->r_delim] = $val;
-				}
+                    $temp[$this->l_delim . $key . $this->r_delim] = $val;
+                }
 
-				$str .= strtr($match[1], $temp);
-			}
+                $str .= strtr($match[1], $temp);
+            }
 
-			$replace[$match[0]] = $str;
-		}
+            $replace[$match[0]] = $str;
+        }
 
-		return $replace;
-	}
+        return $replace;
+    }
 
 }

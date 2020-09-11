@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 2.1.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 2.1.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -40,26 +40,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * PDO Forge Class
  *
- * @package		CodeIgniter
- * @subpackage	Drivers
+ * @package        CodeIgniter
+ * @subpackage    Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/database/
+ * @link        https://codeigniter.com/database/
  */
 class CI_DB_pdo_forge extends CI_DB_forge {
 
 	/**
-	 * CREATE TABLE IF statement
-	 *
-	 * @var	string
+     * CREATE TABLE IF statement
+     *
+     * @var    string
 	 */
-	protected $_create_table_if	= FALSE;
+    protected $_create_table_if = false;
 
 	/**
-	 * DROP TABLE IF statement
-	 *
-	 * @var	string
+     * DROP TABLE IF statement
+     *
+     * @var    string
 	 */
-	protected $_drop_table_if	= FALSE;
+    protected $_drop_table_if = false;
 
 }

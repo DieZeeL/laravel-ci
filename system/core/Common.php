@@ -51,8 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('is_php'))
-{
+if (!function_exists('is_php')) {
 	/**
 	 * Determines if the current version of PHP is equal to or greater than the supplied value
 	 *
@@ -75,8 +74,7 @@ if ( ! function_exists('is_php'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('is_really_writable'))
-{
+if (!function_exists('is_really_writable')) {
 	/**
 	 * Tests for file writability
 	 *
@@ -102,7 +100,7 @@ if ( ! function_exists('is_really_writable'))
 		if (is_dir($file))
 		{
 			$file = rtrim($file, '/').'/'.md5(mt_rand());
-			if (($fp = @fopen($file, 'ab')) === FALSE)
+            if (($fp = @fopen($file, 'ab')) === false)
 			{
 				return FALSE;
 			}
@@ -111,8 +109,7 @@ if ( ! function_exists('is_really_writable'))
 			@chmod($file, 0777);
 			@unlink($file);
 			return TRUE;
-		}
-		elseif ( ! is_file($file) OR ($fp = @fopen($file, 'ab')) === FALSE)
+        } elseif (!is_file($file) OR ($fp = @fopen($file, 'ab')) === false)
 		{
 			return FALSE;
 		}
@@ -124,8 +121,7 @@ if ( ! function_exists('is_really_writable'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('load_class'))
-{
+if (!function_exists('load_class')) {
 	/**
 	 * Class registry
 	 *
@@ -138,7 +134,7 @@ if ( ! function_exists('load_class'))
 	 * @param	mixed	an optional argument to pass to the class constructor
 	 * @return	object
 	 */
-	function &load_class($class, $directory = 'libraries', $param = NULL)
+    function &load_class($class, $directory = 'libraries', $param = null)
 	{
 		static $_classes = array();
 
@@ -158,7 +154,7 @@ if ( ! function_exists('load_class'))
 			{
 				$name = 'CI_'.$class;
 
-				if (class_exists($name, FALSE) === FALSE)
+                if (class_exists($name, false) === false)
 				{
 					require_once($path.$directory.'/'.$class.'.php');
 				}
@@ -172,7 +168,7 @@ if ( ! function_exists('load_class'))
 		{
 			$name = config_item('subclass_prefix').$class;
 
-			if (class_exists($name, FALSE) === FALSE)
+            if (class_exists($name, false) === false)
 			{
 				require_once(APPPATH.$directory.'/'.$name.'.php');
 			}
@@ -200,8 +196,7 @@ if ( ! function_exists('load_class'))
 
 // --------------------------------------------------------------------
 
-if ( ! function_exists('is_loaded'))
-{
+if (!function_exists('is_loaded')) {
 	/**
 	 * Keeps track of which libraries have been loaded. This function is
 	 * called by the load_class() function above
@@ -224,8 +219,7 @@ if ( ! function_exists('is_loaded'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_config'))
-{
+if (!function_exists('get_config')) {
 	/**
 	 * Loads the main config.php file
 	 *
@@ -239,31 +233,25 @@ if ( ! function_exists('get_config'))
 	{
 		static $config;
 
-		if (empty($config))
-		{
+        if (empty($config)) {
 			$file_path = APPPATH.'config/config.php';
-			$found = FALSE;
-			if (file_exists($file_path))
-			{
-				$found = TRUE;
+            $found = false;
+            if (file_exists($file_path)) {
+                $found = true;
 				require($file_path);
 			}
 
 			// Is the config file in the environment folder?
-			if (file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/config.php'))
-			{
+            if (file_exists($file_path = APPPATH . 'config/' . ENVIRONMENT . '/config.php')) {
 				require($file_path);
-			}
-			elseif ( ! $found)
-			{
+            } elseif (!$found) {
 				set_status_header(503);
 				echo 'The configuration file does not exist.';
 				exit(3); // EXIT_CONFIG
 			}
 
 			// Does the $config array exist in the file?
-			if ( ! isset($config) OR ! is_array($config))
-			{
+            if (!isset($config) OR !is_array($config)) {
 				set_status_header(503);
 				echo 'Your config file does not appear to be formatted correctly.';
 				exit(3); // EXIT_CONFIG
@@ -271,8 +259,7 @@ if ( ! function_exists('get_config'))
 		}
 
 		// Are any values being dynamically added or replaced?
-		foreach ($replace as $key => $val)
-		{
+        foreach ($replace as $key => $val) {
 			$config[$key] = $val;
 		}
 
@@ -282,8 +269,7 @@ if ( ! function_exists('get_config'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('config_item'))
-{
+if (!function_exists('config_item')) {
 	/**
 	 * Returns the specified config item
 	 *
@@ -294,20 +280,18 @@ if ( ! function_exists('config_item'))
 	{
 		static $_config;
 
-		if (empty($_config))
-		{
+        if (empty($_config)) {
 			// references cannot be directly assigned to static variables, so we use an array
 			$_config[0] =& get_config();
 		}
 
-		return isset($_config[0][$item]) ? $_config[0][$item] : NULL;
+        return isset($_config[0][$item]) ? $_config[0][$item] : null;
 	}
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('get_mimes'))
-{
+if (!function_exists('get_mimes')) {
 	/**
 	 * Returns the MIME types array from config/mimes.php
 	 *
@@ -317,14 +301,12 @@ if ( ! function_exists('get_mimes'))
 	{
 		static $_mimes;
 
-		if (empty($_mimes))
-		{
+        if (empty($_mimes)) {
 			$_mimes = file_exists(APPPATH.'config/mimes.php')
 				? include(APPPATH.'config/mimes.php')
 				: array();
 
-			if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/mimes.php'))
-			{
+            if (file_exists(APPPATH . 'config/' . ENVIRONMENT . '/mimes.php')) {
 				$_mimes = array_merge($_mimes, include(APPPATH.'config/'.ENVIRONMENT.'/mimes.php'));
 			}
 		}
@@ -335,8 +317,7 @@ if ( ! function_exists('get_mimes'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('is_https'))
-{
+if (!function_exists('is_https')) {
 	/**
 	 * Is HTTPS?
 	 *
@@ -347,27 +328,21 @@ if ( ! function_exists('is_https'))
 	 */
 	function is_https()
 	{
-		if ( ! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
-		{
-			return TRUE;
-		}
-		elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
-		{
-			return TRUE;
-		}
-		elseif ( ! empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off')
-		{
-			return TRUE;
+        if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+            return true;
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
+            return true;
+        } elseif (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off') {
+            return true;
 		}
 
-		return FALSE;
+        return false;
 	}
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('is_cli'))
-{
+if (!function_exists('is_cli')) {
 
 	/**
 	 * Is CLI?
@@ -384,8 +359,7 @@ if ( ! function_exists('is_cli'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('show_error'))
-{
+if (!function_exists('show_error')) {
 	/**
 	 * Error Handler
 	 *
@@ -403,13 +377,10 @@ if ( ! function_exists('show_error'))
 	function show_error($message, $status_code = 500, $heading = 'An Error Was Encountered')
 	{
 		$status_code = abs($status_code);
-		if ($status_code < 100)
-		{
+        if ($status_code < 100) {
 			$exit_status = $status_code + 9; // 9 is EXIT__AUTO_MIN
 			$status_code = 500;
-		}
-		else
-		{
+        } else {
 			$exit_status = 1; // EXIT_ERROR
 		}
 
@@ -421,8 +392,7 @@ if ( ! function_exists('show_error'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('show_404'))
-{
+if (!function_exists('show_404')) {
 	/**
 	 * 404 Page Handler
 	 *
@@ -444,8 +414,7 @@ if ( ! function_exists('show_404'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('log_message'))
-{
+if (!function_exists('log_message')) {
 	/**
 	 * Error Logging Interface
 	 *
@@ -460,8 +429,7 @@ if ( ! function_exists('log_message'))
 	{
 		static $_log;
 
-		if ($_log === NULL)
-		{
+        if ($_log === null) {
 			// references cannot be directly assigned to static variables, so we use an array
 			$_log[0] =& load_class('Log', 'core');
 		}
@@ -472,8 +440,7 @@ if ( ! function_exists('log_message'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('set_status_header'))
-{
+if (!function_exists('set_status_header')) {
 	/**
 	 * Set HTTP Status Header
 	 *
@@ -483,18 +450,15 @@ if ( ! function_exists('set_status_header'))
 	 */
 	function set_status_header($code = 200, $text = '')
 	{
-		if (is_cli())
-		{
+        if (is_cli()) {
 			return;
 		}
 
-		if (empty($code) OR ! is_numeric($code))
-		{
+        if (empty($code) OR !is_numeric($code)) {
 			show_error('Status codes must be numeric', 500);
 		}
 
-		if (empty($text))
-		{
+        if (empty($text)) {
 			is_int($code) OR $code = (int) $code;
 			$stati = array(
 				100	=> 'Continue',
@@ -549,32 +513,29 @@ if ( ! function_exists('set_status_header'))
 				511	=> 'Network Authentication Required',
 			);
 
-			if (isset($stati[$code]))
-			{
+            if (isset($stati[$code])) {
 				$text = $stati[$code];
-			}
-			else
-			{
-				show_error('No status text available. Please check your status code number or supply your own message text.', 500);
+            } else {
+                show_error('No status text available. Please check your status code number or supply your own message text.',
+                    500);
 			}
 		}
 
-		if (strpos(PHP_SAPI, 'cgi') === 0)
-		{
-			header('Status: '.$code.' '.$text, TRUE);
+        if (strpos(PHP_SAPI, 'cgi') === 0) {
+            header('Status: ' . $code . ' ' . $text, true);
 			return;
 		}
 
-		$server_protocol = (isset($_SERVER['SERVER_PROTOCOL']) && in_array($_SERVER['SERVER_PROTOCOL'], array('HTTP/1.0', 'HTTP/1.1', 'HTTP/2'), TRUE))
+        $server_protocol = (isset($_SERVER['SERVER_PROTOCOL']) && in_array($_SERVER['SERVER_PROTOCOL'],
+                array('HTTP/1.0', 'HTTP/1.1', 'HTTP/2'), true))
 			? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
-		header($server_protocol.' '.$code.' '.$text, TRUE, $code);
+        header($server_protocol . ' ' . $code . ' ' . $text, true, $code);
 	}
 }
 
 // --------------------------------------------------------------------
 
-if ( ! function_exists('_error_handler'))
-{
+if (!function_exists('_error_handler')) {
 	/**
 	 * Error Handler
 	 *
@@ -602,8 +563,7 @@ if ( ! function_exists('_error_handler'))
 		// it is only called when the display_errors flag is set (which isn't usually
 		// the case in a production environment) or when errors are ignored because
 		// they are above the error_reporting threshold.
-		if ($is_error)
-		{
+        if ($is_error) {
 			set_status_header(500);
 		}
 
@@ -626,8 +586,7 @@ if ( ! function_exists('_error_handler'))
 		// If the error is fatal, the execution of the script should be stopped because
 		// errors can't be recovered from. Halting the script conforms with PHP's
 		// default error handling. See http://www.php.net/manual/en/errorfunc.constants.php
-		if ($is_error)
-		{
+        if ($is_error) {
 			exit(1); // EXIT_ERROR
 		}
 	}
@@ -635,8 +594,7 @@ if ( ! function_exists('_error_handler'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('_exception_handler'))
-{
+if (!function_exists('_exception_handler')) {
 	/**
 	 * Exception Handler
 	 *
@@ -650,12 +608,12 @@ if ( ! function_exists('_exception_handler'))
 	function _exception_handler($exception)
 	{
 		$_error =& load_class('Exceptions', 'core');
-		$_error->log_exception('error', 'Exception: '.$exception->getMessage(), $exception->getFile(), $exception->getLine());
+        $_error->log_exception('error', 'Exception: ' . $exception->getMessage(), $exception->getFile(),
+            $exception->getLine());
 
 		is_cli() OR set_status_header(500);
 		// Should we display the error?
-		if (str_ireplace(array('off', 'none', 'no', 'false', 'null'), '', ini_get('display_errors')))
-		{
+        if (str_ireplace(array('off', 'none', 'no', 'false', 'null'), '', ini_get('display_errors'))) {
 			$_error->show_exception($exception);
 		}
 
@@ -665,8 +623,7 @@ if ( ! function_exists('_exception_handler'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('_shutdown_handler'))
-{
+if (!function_exists('_shutdown_handler')) {
 	/**
 	 * Shutdown Handler
 	 *
@@ -684,8 +641,7 @@ if ( ! function_exists('_shutdown_handler'))
 	{
 		$last_error = error_get_last();
 		if (isset($last_error) &&
-			($last_error['type'] & (E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING)))
-		{
+            ($last_error['type'] & (E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING))) {
 			_error_handler($last_error['type'], $last_error['message'], $last_error['file'], $last_error['line']);
 		}
 	}
@@ -693,8 +649,7 @@ if ( ! function_exists('_shutdown_handler'))
 
 // --------------------------------------------------------------------
 
-if ( ! function_exists('remove_invisible_characters'))
-{
+if (!function_exists('remove_invisible_characters')) {
 	/**
 	 * Remove Invisible Characters
 	 *
@@ -741,17 +696,15 @@ if ( ! function_exists('html_escape'))
 	 * @param	bool	$double_encode	$double_encode set to FALSE prevents escaping twice.
 	 * @return	mixed			The escaped string or array of strings as a result.
 	 */
-	function html_escape($var, $double_encode = TRUE)
-	{
-		if (empty($var))
-		{
+    function html_escape($var, $double_encode = true)
+    {
+        if (empty($var)) {
 			return $var;
 		}
 
 		if (is_array($var))
 		{
-			foreach (array_keys($var) as $key)
-			{
+            foreach (array_keys($var) as $key) {
 				$var[$key] = html_escape($var[$key], $double_encode);
 			}
 
@@ -764,8 +717,7 @@ if ( ! function_exists('html_escape'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('_stringify_attributes'))
-{
+if (!function_exists('_stringify_attributes')) {
 	/**
 	 * Stringify attributes for use in HTML tags.
 	 *
@@ -776,24 +728,21 @@ if ( ! function_exists('_stringify_attributes'))
 	 * @param	bool
 	 * @return	string
 	 */
-	function _stringify_attributes($attributes, $js = FALSE)
-	{
-		$atts = NULL;
+    function _stringify_attributes($attributes, $js = false)
+    {
+        $atts = null;
 
-		if (empty($attributes))
-		{
+        if (empty($attributes)) {
 			return $atts;
 		}
 
-		if (is_string($attributes))
-		{
+        if (is_string($attributes)) {
 			return ' '.$attributes;
 		}
 
 		$attributes = (array) $attributes;
 
-		foreach ($attributes as $key => $val)
-		{
+        foreach ($attributes as $key => $val) {
 			$atts .= ($js) ? $key.'='.$val.',' : ' '.$key.'="'.$val.'"';
 		}
 
@@ -803,8 +752,7 @@ if ( ! function_exists('_stringify_attributes'))
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('function_usable'))
-{
+if (!function_exists('function_usable')) {
 	/**
 	 * Function usable
 	 *
@@ -832,18 +780,16 @@ if ( ! function_exists('function_usable'))
 	{
 		static $_suhosin_func_blacklist;
 
-		if (function_exists($function_name))
-		{
-			if ( ! isset($_suhosin_func_blacklist))
-			{
+        if (function_exists($function_name)) {
+            if (!isset($_suhosin_func_blacklist)) {
 				$_suhosin_func_blacklist = extension_loaded('suhosin')
 					? explode(',', trim(ini_get('suhosin.executor.func.blacklist')))
 					: array();
 			}
 
-			return ! in_array($function_name, $_suhosin_func_blacklist, TRUE);
+            return !in_array($function_name, $_suhosin_func_blacklist, true);
 		}
 
-		return FALSE;
+        return false;
 	}
 }

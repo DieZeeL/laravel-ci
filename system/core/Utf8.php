@@ -61,7 +61,7 @@ class CI_Utf8 {
 	{
 		if (
 			defined('PREG_BAD_UTF8_ERROR')				// PCRE must support UTF-8
-			&& (ICONV_ENABLED === TRUE OR MB_ENABLED === TRUE)	// iconv or mbstring must be installed
+            && (ICONV_ENABLED === true OR MB_ENABLED === true)    // iconv or mbstring must be installed
 			&& strtoupper(config_item('charset')) === 'UTF-8'	// Application charset must be UTF-8
 			)
 		{
@@ -89,14 +89,10 @@ class CI_Utf8 {
 	 */
 	public function clean_string($str)
 	{
-		if ($this->is_ascii($str) === FALSE)
-		{
-			if (MB_ENABLED)
-			{
+        if ($this->is_ascii($str) === false) {
+            if (MB_ENABLED) {
 				$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');
-			}
-			elseif (ICONV_ENABLED)
-			{
+            } elseif (ICONV_ENABLED) {
 				$str = @iconv('UTF-8', 'UTF-8//IGNORE', $str);
 			}
 		}
@@ -134,16 +130,13 @@ class CI_Utf8 {
 	 */
 	public function convert_to_utf8($str, $encoding)
 	{
-		if (MB_ENABLED)
-		{
+        if (MB_ENABLED) {
 			return mb_convert_encoding($str, 'UTF-8', $encoding);
-		}
-		elseif (ICONV_ENABLED)
-		{
+        } elseif (ICONV_ENABLED) {
 			return @iconv($encoding, 'UTF-8', $str);
 		}
 
-		return FALSE;
+        return false;
 	}
 
 	// --------------------------------------------------------------------

@@ -49,8 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('element'))
-{
+if (!function_exists('element')) {
 	/**
 	 * Element
 	 *
@@ -62,16 +61,18 @@ if ( ! function_exists('element'))
 	 * @param	mixed
 	 * @return	mixed	depends on what the array contains
 	 */
-	function element($item, array $array, $default = NULL)
-	{
-		return array_key_exists($item, $array) ? $array[$item] : $default;
+    function element($item, $array, $default = null)
+    {
+        if (!is_array($array) || !isset($array[$item]) || $array[$item] === "") {
+            return $default;
+        }
+        return $array[$item];
 	}
 }
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('random_element'))
-{
+if (!function_exists('random_element')) {
 	/**
 	 * Random Element - Takes an array as input and returns a random element
 	 *
@@ -86,8 +87,7 @@ if ( ! function_exists('random_element'))
 
 // --------------------------------------------------------------------
 
-if ( ! function_exists('elements'))
-{
+if (!function_exists('elements')) {
 	/**
 	 * Elements
 	 *
@@ -99,7 +99,7 @@ if ( ! function_exists('elements'))
 	 * @param	mixed
 	 * @return	mixed	depends on what the array contains
 	 */
-	function elements($items, array $array, $default = NULL)
+    function elements($items, array $array, $default = null)
 	{
 		$return = array();
 

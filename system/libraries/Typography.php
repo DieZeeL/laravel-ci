@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 1.0.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -40,55 +40,55 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Typography Class
  *
- * @package		CodeIgniter
- * @subpackage	Libraries
+ * @package        CodeIgniter
+ * @subpackage    Libraries
  * @category	Helpers
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/libraries/typography.html
+ * @link        https://codeigniter.com/user_guide/libraries/typography.html
  */
 class CI_Typography {
 
-	/**
-	 * Block level elements that should not be wrapped inside <p> tags
-	 *
-	 * @var string
-	 */
-	public $block_elements = 'address|blockquote|div|dl|fieldset|form|h\d|hr|noscript|object|ol|p|pre|script|table|ul';
+    /**
+     * Block level elements that should not be wrapped inside <p> tags
+     *
+     * @var string
+     */
+    public $block_elements = 'address|blockquote|div|dl|fieldset|form|h\d|hr|noscript|object|ol|p|pre|script|table|ul';
 
-	/**
-	 * Elements that should not have <p> and <br /> tags within them.
-	 *
-	 * @var string
-	 */
-	public $skip_elements	= 'p|pre|ol|ul|dl|object|table|h\d';
+    /**
+     * Elements that should not have <p> and <br /> tags within them.
+     *
+     * @var string
+     */
+    public $skip_elements = 'p|pre|ol|ul|dl|object|table|h\d';
 
-	/**
-	 * Tags we want the parser to completely ignore when splitting the string.
-	 *
-	 * @var string
-	 */
-	public $inline_elements = 'a|abbr|acronym|b|bdo|big|br|button|cite|code|del|dfn|em|i|img|ins|input|label|map|kbd|q|samp|select|small|span|strong|sub|sup|textarea|tt|var';
+    /**
+     * Tags we want the parser to completely ignore when splitting the string.
+     *
+     * @var string
+     */
+    public $inline_elements = 'a|abbr|acronym|b|bdo|big|br|button|cite|code|del|dfn|em|i|img|ins|input|label|map|kbd|q|samp|select|small|span|strong|sub|sup|textarea|tt|var';
 
-	/**
-	 * array of block level elements that require inner content to be within another block level element
-	 *
-	 * @var array
-	 */
-	public $inner_block_required = array('blockquote');
+    /**
+     * array of block level elements that require inner content to be within another block level element
+     *
+     * @var array
+     */
+    public $inner_block_required = array('blockquote');
 
-	/**
-	 * the last block element parsed
-	 *
-	 * @var string
-	 */
-	public $last_block_element = '';
+    /**
+     * the last block element parsed
+     *
+     * @var string
+     */
+    public $last_block_element = '';
 
-	/**
-	 * whether or not to protect quotes within { curly braces }
-	 *
-	 * @var bool
-	 */
-	public $protect_braced_quotes = FALSE;
+    /**
+     * whether or not to protect quotes within { curly braces }
+     *
+     * @var bool
+     */
+    public $protect_braced_quotes = false;
 
 	/**
 	 * Auto Typography
@@ -105,9 +105,9 @@ class CI_Typography {
 	 * @param	bool	whether to reduce more then two consecutive newlines to two
 	 * @return	string
 	 */
-	public function auto_typography($str, $reduce_linebreaks = FALSE)
-	{
-		if ($str === '')
+    public function auto_typography($str, $reduce_linebreaks = false)
+    {
+        if ($str === '')
 		{
 			return '';
 		}
@@ -127,12 +127,10 @@ class CI_Typography {
 
 		// HTML comment tags don't conform to patterns of normal tags, so pull them out separately, only if needed
 		$html_comments = array();
-		if (strpos($str, '<!--') !== FALSE && preg_match_all('#(<!\-\-.*?\-\->)#s', $str, $matches))
-		{
-			for ($i = 0, $total = count($matches[0]); $i < $total; $i++)
-			{
-				$html_comments[] = $matches[0][$i];
-				$str = str_replace($matches[0][$i], '{@HC'.$i.'}', $str);
+        if (strpos($str, '<!--') !== false && preg_match_all('#(<!\-\-.*?\-\->)#s', $str, $matches)) {
+            for ($i = 0, $total = count($matches[0]); $i < $total; $i++) {
+                $html_comments[] = $matches[0][$i];
+                $str = str_replace($matches[0][$i], '{@HC' . $i . '}', $str);
 			}
 		}
 
@@ -140,79 +138,78 @@ class CI_Typography {
 		// not contain <pre> tags, and it keeps the PCRE patterns below simpler and faster
 		if (strpos($str, '<pre') !== FALSE)
 		{
-			$str = preg_replace_callback('#<pre.*?>.*?</pre>#si', array($this, '_protect_characters'), $str);
+            $str = preg_replace_callback('#<pre.*?>.*?</pre>#si', array($this, '_protect_characters'), $str);
 		}
 
 		// Convert quotes within tags to temporary markers.
-		$str = preg_replace_callback('#<.+?>#si', array($this, '_protect_characters'), $str);
+        $str = preg_replace_callback('#<.+?>#si', array($this, '_protect_characters'), $str);
 
 		// Do the same with braces if necessary
 		if ($this->protect_braced_quotes === TRUE)
 		{
-			$str = preg_replace_callback('#\{.+?\}#si', array($this, '_protect_characters'), $str);
+            $str = preg_replace_callback('#\{.+?\}#si', array($this, '_protect_characters'), $str);
 		}
 
 		// Convert "ignore" tags to temporary marker.  The parser splits out the string at every tag
 		// it encounters.  Certain inline tags, like image tags, links, span tags, etc. will be
 		// adversely affected if they are split out so we'll convert the opening bracket < temporarily to: {@TAG}
-		$str = preg_replace('#<(/*)('.$this->inline_elements.')([ >])#i', '{@TAG}\\1\\2\\3', $str);
+        $str = preg_replace('#<(/*)(' . $this->inline_elements . ')([ >])#i', '{@TAG}\\1\\2\\3', $str);
 
-		/* Split the string at every tag. This expression creates an array with this prototype:
-		 *
-		 *	[array]
-		 *	{
-		 *		[0] = <opening tag>
-		 *		[1] = Content...
-		 *		[2] = <closing tag>
-		 *		Etc...
-		 *	}
-		 */
+        /* Split the string at every tag. This expression creates an array with this prototype:
+         *
+         *	[array]
+         *	{
+         *		[0] = <opening tag>
+         *		[1] = Content...
+         *		[2] = <closing tag>
+         *		Etc...
+         *	}
+         */
 		$chunks = preg_split('/(<(?:[^<>]+(?:"[^"]*"|\'[^\']*\')?)+>)/', $str, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		// Build our finalized string.  We cycle through the array, skipping tags, and processing the contained text
 		$str = '';
 		$process = TRUE;
 
-		for ($i = 0, $c = count($chunks) - 1; $i <= $c; $i++)
+        for ($i = 0, $c = count($chunks) - 1; $i <= $c; $i++)
 		{
 			// Are we dealing with a tag? If so, we'll skip the processing for this cycle.
 			// Well also set the "process" flag which allows us to skip <pre> tags and a few other things.
-			if (preg_match('#<(/*)('.$this->block_elements.').*?>#', $chunks[$i], $match))
+            if (preg_match('#<(/*)(' . $this->block_elements . ').*?>#', $chunks[$i], $match))
 			{
-				if (preg_match('#'.$this->skip_elements.'#', $match[2]))
+                if (preg_match('#' . $this->skip_elements . '#', $match[2]))
 				{
-					$process = ($match[1] === '/');
+                    $process = ($match[1] === '/');
 				}
 
-				if ($match[1] === '')
+                if ($match[1] === '')
 				{
 					$this->last_block_element = $match[2];
 				}
 
-				$str .= $chunks[$i];
+                $str .= $chunks[$i];
 				continue;
 			}
 
-			if ($process === FALSE)
+            if ($process === false)
 			{
-				$str .= $chunks[$i];
+                $str .= $chunks[$i];
 				continue;
 			}
 
 			//  Force a newline to make sure end tags get processed by _format_newlines()
-			if ($i === $c)
+            if ($i === $c)
 			{
-				$chunks[$i] .= "\n";
+                $chunks[$i] .= "\n";
 			}
 
 			//  Convert Newlines into <p> and <br /> tags
-			$str .= $this->_format_newlines($chunks[$i]);
+            $str .= $this->_format_newlines($chunks[$i]);
 		}
 
-		// No opening block level tag? Add it if needed.
-		if ( ! preg_match('/^\s*<(?:'.$this->block_elements.')/i', $str))
-		{
-			$str = preg_replace('/^(.*?)<('.$this->block_elements.')/i', '<p>$1</p><$2', $str);
+        // No opening block level tag? Add it if needed.
+        if (!preg_match('/^\s*<(?:' . $this->block_elements . ')/i', $str)) {
+            $str = preg_replace('/^(.*?)<(' . $this->block_elements . ')/i', '<p>$1</p><$2', $str);
 		}
 
 		// Convert quotes, elipsis, em-dashes, non-breaking spaces, and ampersands
@@ -241,7 +238,7 @@ class CI_Typography {
 						// Clean up stray paragraph tags that appear before block level elements
 						'#<p></p><('.$this->block_elements.')#'	=> '<$1',
 
-						// Clean up stray non-breaking spaces preceding block elements
+            // Clean up stray non-breaking spaces preceding block elements
 						'#(&nbsp;\s*)+<('.$this->block_elements.')#'	=> '  <$2',
 
 						// Replace the temporary markers we added earlier
@@ -259,7 +256,7 @@ class CI_Typography {
 
 						// Similarly, there might be cases where a closing </block> will follow
 						// a closing </p> tag, so we'll correct it by adding a newline in between
-						'#</p></#'			=> "</p>\n</"
+            '#</p></#' => "</p>\n</"
 						);
 
 		// Do we need to reduce empty lines?
@@ -290,7 +287,7 @@ class CI_Typography {
 	 * @param	string
 	 * @return	string
 	 */
-	public function format_characters($str)
+    public function format_characters($str)
 	{
 		static $table;
 
@@ -353,9 +350,10 @@ class CI_Typography {
 	 * @param	string
 	 * @return	string
 	 */
-	protected function _format_newlines($str)
-	{
-		if ($str === '' OR (strpos($str, "\n") === FALSE && ! in_array($this->last_block_element, $this->inner_block_required)))
+    protected function _format_newlines($str)
+    {
+        if ($str === '' OR (strpos($str, "\n") === false && !in_array($this->last_block_element,
+                    $this->inner_block_required)))
 		{
 			return $str;
 		}
@@ -364,10 +362,10 @@ class CI_Typography {
 		$str = str_replace("\n\n", "</p>\n\n<p>", $str);
 
 		// Convert single spaces to <br /> tags
-		$str = preg_replace("/([^\n])(\n)([^\n])/", '\\1<br />\\2\\3', $str);
+        $str = preg_replace("/([^\n])(\n)([^\n])/", '\\1<br />\\2\\3', $str);
 
 		// Wrap the whole enchilada in enclosing paragraphs
-		if ($str !== "\n")
+        if ($str !== "\n")
 		{
 			// We trim off the right-side new line so that the closing </p> tag
 			// will be positioned immediately following the string, matching
@@ -377,7 +375,7 @@ class CI_Typography {
 
 		// Remove empty paragraphs if they are on the first line, as this
 		// is a potential unintended consequence of the previous code
-		return preg_replace('/<p><\/p>(.*)/', '\\1', $str, 1);
+        return preg_replace('/<p><\/p>(.*)/', '\\1', $str, 1);
 	}
 
 	// ------------------------------------------------------------------------
@@ -393,7 +391,7 @@ class CI_Typography {
 	 * @param	array
 	 * @return	string
 	 */
-	protected function _protect_characters($match)
+    protected function _protect_characters($match)
 	{
 		return str_replace(array("'",'"','--','  '), array('{@SQ}', '{@DQ}', '{@DD}', '{@NBS}'), $match[0]);
 	}
@@ -406,15 +404,14 @@ class CI_Typography {
 	 * @param	string
 	 * @return	string
 	 */
-	public function nl2br_except_pre($str)
-	{
-		$newstr = '';
-		for ($ex = explode('pre>', $str), $ct = count($ex), $i = 0; $i < $ct; $i++)
-		{
-			$newstr .= (($i % 2) === 0) ? nl2br($ex[$i]) : $ex[$i];
-			if ($ct - 1 !== $i)
+    public function nl2br_except_pre($str)
+    {
+        $newstr = '';
+        for ($ex = explode('pre>', $str), $ct = count($ex), $i = 0; $i < $ct; $i++) {
+            $newstr .= (($i % 2) === 0) ? nl2br($ex[$i]) : $ex[$i];
+            if ($ct - 1 !== $i)
 			{
-				$newstr .= 'pre>';
+                $newstr .= 'pre>';
 			}
 		}
 

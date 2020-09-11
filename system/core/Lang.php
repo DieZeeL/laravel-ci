@@ -85,12 +85,10 @@ class CI_Lang {
 	 *
 	 * @return	void|string[]	Array containing translations, if $return is set to TRUE
 	 */
-	public function load($langfile, $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '')
-	{
-		if (is_array($langfile))
-		{
-			foreach ($langfile as $value)
-			{
+    public function load($langfile, $idiom = '', $return = false, $add_suffix = true, $alt_path = '')
+    {
+        if (is_array($langfile)) {
+            foreach ($langfile as $value) {
 				$this->load($value, $idiom, $return, $add_suffix, $alt_path);
 			}
 
@@ -99,39 +97,33 @@ class CI_Lang {
 
 		$langfile = str_replace('.php', '', $langfile);
 
-		if ($add_suffix === TRUE)
-		{
+        if ($add_suffix === true) {
 			$langfile = preg_replace('/_lang$/', '', $langfile).'_lang';
 		}
 
 		$langfile .= '.php';
 
-		if (empty($idiom) OR ! preg_match('/^[a-z_-]+$/i', $idiom))
-		{
+        if (empty($idiom) OR !preg_match('/^[a-z_-]+$/i', $idiom)) {
 			$config =& get_config();
 			$idiom = empty($config['language']) ? 'english' : $config['language'];
 		}
 
-		if ($return === FALSE && isset($this->is_loaded[$langfile]) && $this->is_loaded[$langfile] === $idiom)
-		{
+        if ($return === false && isset($this->is_loaded[$langfile]) && $this->is_loaded[$langfile] === $idiom) {
 			return;
 		}
 
 		// Load the base file, so any others found can override it
 		$basepath = BASEPATH.'language/'.$idiom.'/'.$langfile;
-		if (($found = file_exists($basepath)) === TRUE)
-		{
+        if (($found = file_exists($basepath)) === true) {
 			include($basepath);
 		}
 
 		// Do we have an alternative path to look in?
-		if ($alt_path !== '')
-		{
+        if ($alt_path !== '') {
 			$alt_path .= 'language/'.$idiom.'/'.$langfile;
-			if (file_exists($alt_path))
-			{
+            if (file_exists($alt_path)) {
 				include($alt_path);
-				$found = TRUE;
+                $found = true;
 			}
 		}
 		else
@@ -148,8 +140,7 @@ class CI_Lang {
 			}
 		}
 
-		if ($found !== TRUE)
-		{
+        if ($found !== true) {
 			show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
 		}
 
@@ -157,14 +148,13 @@ class CI_Lang {
 		{
 			log_message('error', 'Language file contains no data: language/'.$idiom.'/'.$langfile);
 
-			if ($return === TRUE)
-			{
+            if ($return === true) {
 				return array();
 			}
 			return;
 		}
 
-		if ($return === TRUE)
+        if ($return === true)
 		{
 			return $lang;
 		}
@@ -187,12 +177,12 @@ class CI_Lang {
 	 * @param	bool	$log_errors	Whether to log an error message if the line is not found
 	 * @return	string	Translation
 	 */
-	public function line($line, $log_errors = TRUE)
-	{
-		$value = isset($this->language[$line]) ? $this->language[$line] : FALSE;
+    public function line($line, $log_errors = true)
+    {
+        $value = isset($this->language[$line]) ? $this->language[$line] : false;
 
 		// Because killer robots like unicorns!
-		if ($value === FALSE && $log_errors === TRUE)
+        if ($value === false && $log_errors === true)
 		{
 			log_message('error', 'Could not find the language line "'.$line.'"');
 		}

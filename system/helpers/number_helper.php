@@ -26,13 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package	CodeIgniter
- * @author	EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @license	https://opensource.org/licenses/MIT	MIT License
- * @link	https://codeigniter.com
- * @since	Version 1.0.0
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright    Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
+ * @license    https://opensource.org/licenses/MIT	MIT License
+ * @link    https://codeigniter.com
+ * @since    Version 1.0.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -44,20 +44,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Helpers
  * @category	Helpers
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/user_guide/helpers/number_helper.html
+ * @link        https://codeigniter.com/user_guide/helpers/number_helper.html
  */
 
 // ------------------------------------------------------------------------
 
-if ( ! function_exists('byte_format'))
-{
-	/**
-	 * Formats a numbers as bytes, based on size, and adds the appropriate suffix
-	 *
-	 * @param	mixed	will be cast as int
-	 * @param	int
-	 * @return	string
-	 */
+if (!function_exists('byte_format')) {
+    /**
+     * Formats a numbers as bytes, based on size, and adds the appropriate suffix
+     *
+     * @param mixed    will be cast as int
+     * @param int
+     * @return    string
+     */
 	function byte_format($num, $precision = 1)
 	{
 		$CI =& get_instance();
