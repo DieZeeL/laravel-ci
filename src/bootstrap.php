@@ -3,7 +3,7 @@
 use diezeel\CI\CIController;
 
 const CI_VERSION = '3.1.11';
-$root_path = dirname(dirname(dirname(dirname(__DIR__)))); // Мега костыль!
+$root_path = dirname(__DIR__, 4);
 $system_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR;
 
 define('ENVIRONMENT', 'development');
