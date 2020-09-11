@@ -20,6 +20,7 @@ define('APPPATH', $root_path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR
 
 define('VIEWPATH', APPPATH . 'views' . DIRECTORY_SEPARATOR);
 
+define('EXT', '.php');
 
 /*
  * ------------------------------------------------------
