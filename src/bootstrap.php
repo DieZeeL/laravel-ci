@@ -1,7 +1,7 @@
 <?php
 const CI_VERSION = '3.1.11';
 
-$system_path = __DIR__. DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR;
+$system_path = dirname(__DIR__). DIRECTORY_SEPARATOR .  'system' . DIRECTORY_SEPARATOR;
 
 // Path to the system directory
 define('BASEPATH', $system_path);

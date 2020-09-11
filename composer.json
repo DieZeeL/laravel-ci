@@ -1,48 +1,49 @@
 {
-  "name": "diezeel/laravel-ci",
-  "description": "Laravel CI implementation",
-  "keywords": [
-    "laravel",
-    "CI",
-    "CodeIgniter"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Sergey Kornienko",
-      "email": "diez.eel@gmail.com",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "php": "^7.3",
-    "ext-json": "*",
-    "laravel/framework": "^8.0"
-  },
-  "require-dev": {
-  },
-  "autoload": {
-    "psr-4": {
+    "name": "diezeel/laravel-ci",
+    "description": "Laravel CI implementation",
+    "keywords": [
+        "laravel",
+        "CI",
+        "CodeIgniter"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sergey Kornienko",
+            "email": "diez.eel@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "ext-json": "*",
+        "laravel/framework": "^8.0"
     },
-    "files": [
-      "src/bootstrap.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-    }
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "diezeel\\CI\\LaravelCIServiceProvider"
-      ]
+    "require-dev": {
     },
-    "branch-alias": {
-    }
-  },
-  "scripts": {
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "autoload": {
+        "psr-4": {
+            "diezeel\\ci\\": "src"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "diezeel\\CI\\LaravelCIServiceProvider"
+            ]
+        },
+        "branch-alias": {
+        }
+    },
+    "scripts": {
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
