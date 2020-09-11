@@ -1,4 +1,7 @@
 <?php
+
+use diezeel\CI\CIController;
+
 const CI_VERSION = '3.1.11';
 $root_path = dirname(dirname(dirname(dirname(__DIR__)))); // Мега костыль!
 $system_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR;
@@ -138,7 +141,7 @@ require_once BASEPATH . 'core/Controller.php';
  */
 function &get_instance()
 {
-    return CI_Controller::get_instance();
+    return CIController::get_instance();
 }
 
 if (file_exists(APPPATH . 'core/' . $CFG->config['subclass_prefix'] . 'Controller.php')) {
