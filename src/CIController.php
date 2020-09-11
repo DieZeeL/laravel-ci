@@ -24,7 +24,7 @@ class CIController extends BaseController
     /**
      * CI_Loader
      *
-     * @var    CI_Loader
+     * @var    \CI_Loader $load
      */
     public $load;
 
@@ -48,6 +48,12 @@ class CIController extends BaseController
         }
 
         $this->load =& load_class('Loader', 'core');
+
+        $route = app('router')->current()->getAction();
+        $module = basename(dirname($route['namespace'], 2));
+        $this->load->setModule($module);
+        $this->router->setModule($module);
+
         $this->load->initialize();
 
         /** @author 18e14c93 Ruslan Hleba <gleba.ruslan@gmail.com> on 13.01.2020 at 20:14 */

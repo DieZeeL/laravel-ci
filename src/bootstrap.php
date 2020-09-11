@@ -11,12 +11,12 @@ define('ENVIRONMENT', 'development');
 define('BASEPATH', $system_path);
 
 // Path to the front controller (this file) directory
-define('FCPATH', $root_path . DIRECTORY_SEPARATOR . 'public');
+define('FCPATH', $root_path . DIRECTORY_SEPARATOR);
 
 // Name of the "system" directory
 define('SYSDIR', basename(BASEPATH));
 
-define('APPPATH', $root_path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'CI' . DIRECTORY_SEPARATOR );
+define('APPPATH', FCPATH . 'app' . DIRECTORY_SEPARATOR . 'CI' . DIRECTORY_SEPARATOR);
 
 define('VIEWPATH', APPPATH . 'views' . DIRECTORY_SEPARATOR);
 
@@ -94,6 +94,13 @@ $UNI =& load_class('Utf8', 'core');
 if(!is_cli()) {
     $URI =& load_class('URI', 'core');
 }
+
+/*
+ * ------------------------------------------------------
+ *  Instantiate the routing class and set the routing
+ * ------------------------------------------------------
+ */
+$RTR =& load_class('Router', 'core', isset($routing) ? $routing : null);
 
 /*
  * ------------------------------------------------------
