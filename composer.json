@@ -1,0 +1,51 @@
+{
+  "name": "diezeel/laravel-ci",
+  "description": "Laravel CI implementation",
+  "keywords": [
+    "laravel",
+    "CI",
+    "CodeIgniter"
+  ],
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "Sergey Kornienko",
+      "email": "diez.eel@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.3",
+    "ext-json": "*",
+    "laravel/framework": "^8.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+    },
+    "files": [
+      "src/bootstrap.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "diezeel\\CI\\LaravelCIServiceProvider"
+      ],
+      "aliases": {
+        "ci": "diezeel\\CI\\Facades\\Ci"
+      }
+    },
+    "branch-alias": {
+    }
+  },
+  "scripts": {
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
