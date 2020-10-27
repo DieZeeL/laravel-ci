@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Routing\ControllerMiddlewareOptions;
 use MY_Output;
+use Nwidart\Modules\Facades\Module;
 
 class CIController extends BaseController
 {
@@ -24,7 +25,7 @@ class CIController extends BaseController
     /**
      * CI_Loader
      *
-     * @var    \CI_Loader $load
+     * @var    CI_Loader
      */
     public $load;
 
@@ -43,17 +44,12 @@ class CIController extends BaseController
     public function __construct()
     {
         self::$instance =& $this;
-        foreach (is_loaded() as $var => $class) {
+        global $LOADED;
+        foreach ($LOADED as $var => $class) {
             $this->$var =& load_class($class);
         }
-
+        //$this->config = & load_class('Config');
         $this->load =& load_class('Loader', 'core');
-
-        $route = app('router')->current()->getAction();
-        $module = basename(dirname($route['namespace'], 2));
-        $this->load->setModule($module);
-        $this->router->setModule($module);
-
         $this->load->initialize();
 
         /** @author 18e14c93 Ruslan Hleba <gleba.ruslan@gmail.com> on 13.01.2020 at 20:14 */
@@ -80,8 +76,12 @@ class CIController extends BaseController
             save_log();
         }
         /** end */
+        $this->router =& load_class('Router', 'core');
 
-
+        $namespace = request()->route()->getAction('namespace');
+        $namespaceArr = explode('\\', $namespace);
+        $this->module = Module::find($namespaceArr[1]);
+        $this->load->_ci_set_view_path($this->module->getPath() . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'ci_views' . DIRECTORY_SEPARATOR);
     }
 
     /**

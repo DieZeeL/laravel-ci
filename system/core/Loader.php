@@ -128,9 +128,6 @@ class CI_Loader
     protected $_ci_unloaded_classes = array();
     // --------------------------------------------------------------------
 
-    protected $_module = false;
-
-    protected $_response = false;
     /**
      * Class constructor
      *
@@ -499,11 +496,8 @@ class CI_Loader
      */
     public function view($view, $vars = array(), $return = false)
     {
-        [$path, $file] = $this->_view_path($view);
-        $this->_ci_view_paths = array($path => true) + $this->_ci_view_paths;
         return $this->_ci_load(array(
-            '_ci_view' => $file,
-            //'_ci_path' => $this->_view_path($view),
+            '_ci_view' => $view,
             '_ci_vars' => $this->_ci_prepare_view_vars($vars),
             '_ci_return' => $return
         ));
@@ -512,28 +506,33 @@ class CI_Loader
     /** Load a module view handlebars **/
     public function view_hb($view, $return = false)
     {
-        [$path, $file] = $this->_hbs_path($view);
-        $this->_ci_view_paths = array($path => true) + $this->_ci_view_paths;
-        return $this->_ci_load(array(
-            '_ci_view' => $file,
-            //'_ci_path' => $this->_hbs_path($view),
-            '_ci_vars' => [],
-            '_ci_return' => $return
-        ), '.hbs');
+
+        list($path, $_view) = Modules::find($view, $this->_module, 'views/templates/', '.hbs');
+
+        if ($path != false) {
+            $this->_ci_view_paths = array($path => true) + $this->_ci_view_paths;
+            $view = $_view;
+        }
+
+        return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => [], '_ci_return' => $return), '.hbs');
     }
 
     function view_xml($view, $vars = array(), $return = false)
     {
         $CI = &get_instance();
 
-        if (!$return) {
-            header('Content-Type: application/xml; charset=utf-8');
-            $CI->output->append_output('<?xml version="1.0" encoding="UTF-8"?>' . "\n");
-            $CI->output->set_content_type('text/xml');
+        list($path, $_view) = Modules::find($view, $this->_module, 'views/');
+        header('Content-Type: application/xml; charset=utf-8');
+        CI::$APP->output->append_output('<?xml version="1.0" encoding="UTF-8"?>' . "\n");
+
+        if ($path != false) {
+            $this->_ci_view_paths = array($path => true) + $this->_ci_view_paths;
+            $view = $_view;
         }
 
+        $CI->output->set_content_type('text/xml');
         return $this->_ci_load(array(
-            '_ci_view' => $this->_view_path($view),
+            '_ci_view' => $view,
             '_ci_vars' => $this->_ci_object_to_array($vars),
             '_ci_return' => $return
         ));
@@ -912,7 +911,7 @@ class CI_Loader
      * @param array $_ci_data Data to load
      * @return    object
      */
-    protected function _ci_load($_ci_data, $ext = EXT)
+    protected function _ci_load($_ci_data)
     {
         // Set the default data variables
         foreach (array('_ci_view', '_ci_vars', '_ci_path', '_ci_return') as $_ci_val) {
@@ -925,12 +924,9 @@ class CI_Loader
         if (is_string($_ci_path) && $_ci_path !== '') {
             $_ci_x = explode('/', $_ci_path);
             $_ci_file = end($_ci_x);
-
-            $_ci_ext = pathinfo($_ci_file, PATHINFO_EXTENSION);
-            $_ci_path = ($_ci_ext === '') ? $_ci_path . $ext : $_ci_path;
         } else {
             $_ci_ext = pathinfo($_ci_view, PATHINFO_EXTENSION);
-            $_ci_file = ($_ci_ext === '') ? $_ci_view . $ext : $_ci_view;
+            $_ci_file = ($_ci_ext === '') ? $_ci_view . '.php' : $_ci_view;
 
             foreach ($this->_ci_view_paths as $_ci_view_file => $cascade) {
                 if (file_exists($_ci_view_file . $_ci_file)) {
@@ -941,6 +937,22 @@ class CI_Loader
 
                 if (!$cascade) {
                     break;
+                }
+            }
+        }
+
+        if (!$file_exists && !file_exists($_ci_path)) {
+            $_ci_x = explode('/', $_ci_view);
+            if (\Nwidart\Modules\Facades\Module::has(ucfirst(reset($_ci_x)))) {
+                $_module = \Nwidart\Modules\Facades\Module::find(ucfirst(array_shift($_ci_x)));
+                $_module_path = $_module->getPath() . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'ci_views' . DIRECTORY_SEPARATOR;
+                $this->_ci_set_view_path($_module_path);
+                $_ci_view = implode('/', $_ci_x);
+                $_ci_ext = pathinfo($_ci_view, PATHINFO_EXTENSION);
+                $_ci_file = ($_ci_ext === '') ? $_ci_view . '.php' : $_ci_view;
+                if (file_exists($_module_path . $_ci_file)) {
+                    $_ci_path = $_module_path . $_ci_file;
+                    $file_exists = true;
                 }
             }
         }
@@ -1010,15 +1022,12 @@ class CI_Loader
          * it can be seen and included properly by the first included
          * template and any subsequent ones. Oy!
          */
-//        if(!$this->_response){
-//            $this->_response = response('');
-//        }
         if (ob_get_level() > $this->_ci_ob_level + 1) {
             ob_end_flush();
         } else {
-            $buffer = ob_get_contents();
+            //$_ci_CI->output->append_output(ob_get_contents());
+            \Illuminate\Http\Response::append(ob_get_contents());
             @ob_end_clean();
-            return $buffer;
         }
 
         return $this;
@@ -1411,53 +1420,8 @@ class CI_Loader
         return $CI->$component;
     }
 
-    public function setModule($module)
+    public function _ci_set_view_path($path, $view_cascade = true)
     {
-        $this->_module = $module;
-    }
-
-    private function _view_path($file)
-    {
-        $arr = explode('/', $file);
-        if (count($arr) > 1) {
-            if (\Nwidart\Modules\Facades\Module::has(ucfirst($arr[0]))) {
-                $module = array_shift($arr);
-                $file = array_pop($arr);
-                return [
-                    $this->_views_dir(ucfirst($module)) . (!empty($arr) ? implode(DIRECTORY_SEPARATOR,
-                            $arr) . DIRECTORY_SEPARATOR : ""),
-                    $file
-                ];
-            }
-        }
-        return [$this->_views_dir($this->_module), $file];
-    }
-
-    private function _hbs_path($file)
-    {
-        $arr = explode('/', $file);
-        if (count($arr) > 1) {
-            if (\Nwidart\Modules\Facades\Module::has($arr[0])) {
-                $module = array_shift($arr);
-                return [
-                    $this->_views_dir(ucfirst($module)) . 'templates' . DIRECTORY_SEPARATOR
-                    . (!empty($arr) ? implode(DIRECTORY_SEPARATOR, $arr) . DIRECTORY_SEPARATOR : ""),
-                    $file
-                ];
-            }
-        }
-        return [$this->_views_dir($this->_module) . 'templates' . DIRECTORY_SEPARATOR, $file];
-    }
-
-    private function _views_dir($module)
-    {
-        if ($module === false) {
-            return VIEWPATH;
-        }
-        return FCPATH . app('config')->get('modules.namespace')
-            . DIRECTORY_SEPARATOR . $module
-            . DIRECTORY_SEPARATOR . 'Resources'
-            . DIRECTORY_SEPARATOR . 'ci_views'
-            . DIRECTORY_SEPARATOR;
+        $this->_ci_view_paths = array($path => $view_cascade) + $this->_ci_view_paths;
     }
 }
