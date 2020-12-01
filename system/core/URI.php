@@ -264,7 +264,10 @@ class CI_URI {
 	protected function _parse_argv()
 	{
 		$args = array_slice($_SERVER['argv'], 1);
-		return $args ? implode('/', $args) : '';
+        $args = array_filter($args, function ($arg){
+		    return !str_starts_with($arg,'-');
+        });
+		return $args ? str_replace(':','/',implode('/', $args)) : '';
 	}
 
 	// --------------------------------------------------------------------
