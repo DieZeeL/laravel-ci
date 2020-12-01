@@ -3,10 +3,10 @@
 use diezeel\CI\CIController;
 
 const CI_VERSION = '3.1.11';
-$root_path = dirname(__DIR__, 4);
+$root_path = base_path();
 $system_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR;
 
-define('ENVIRONMENT', 'development');
+define('ENVIRONMENT', env('APP_ENV') !== 'production' ? 'development' : 'production');
 // Path to the system directory
 define('BASEPATH', $system_path);
 
@@ -16,7 +16,7 @@ define('FCPATH', $root_path . DIRECTORY_SEPARATOR);
 // Name of the "system" directory
 define('SYSDIR', basename(BASEPATH));
 
-define('APPPATH', FCPATH . 'app' . DIRECTORY_SEPARATOR . 'CI' . DIRECTORY_SEPARATOR);
+define('APPPATH', config('ci.apppath') . DIRECTORY_SEPARATOR);
 
 define('VIEWPATH', APPPATH . 'views' . DIRECTORY_SEPARATOR);
 

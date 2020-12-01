@@ -11,7 +11,7 @@ class CIServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerConfig();
+
     }
 
     /**
@@ -19,7 +19,8 @@ class CIServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerConfig();
+        require_once 'bootstrap.php';
     }
 
     /**
@@ -34,5 +35,5 @@ class CIServiceProvider extends ServiceProvider
             $configPath => config_path('ci.php'),
         ], 'config');
     }
- 
+
 }
