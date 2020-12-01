@@ -24,7 +24,6 @@
             "diezeel\\CI\\": "src/"
         },
         "files": [
-            "src/bootstrap.php"
         ]
     },
     "minimum-stability": "dev",
