@@ -1424,4 +1424,18 @@ class CI_Loader
     {
         $this->_ci_view_paths = array($path => $view_cascade) + $this->_ci_view_paths;
     }
+
+    /**
+     * CI Object to Array translator
+     *
+     * Takes an object as input and converts the class variables to
+     * an associative array with key/value pairs.
+     *
+     * @param object $object Object data to translate
+     * @return    array
+     */
+    public function _ci_object_to_array($object)
+    {
+        return is_object($object) ? get_object_vars($object) : $object;
+    }
 }
