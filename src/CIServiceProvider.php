@@ -13,21 +13,22 @@ class CIServiceProvider extends ServiceProvider
     public function boot()
     {
         $configPath = __DIR__ . '/../config';
-        $this->publishes([
-            $configPath.'/autoload.php' => app_path('CI/config/autoload.php'),
-            $configPath.'/config.php' => app_path('CI/config/config.php'),
-            $configPath.'/constants.php' => app_path('CI/config/constants.php'),
-            $configPath.'/doctypes.php' => app_path('CI/config/doctypes.php'),
-            $configPath . '/foreign_chars.php' => app_path('CI/config/foreign_chars.php'),
-            $configPath . '/hooks.php' => app_path('CI/config/hooks.php'),
-            $configPath . '/memcached.php' => app_path('CI/config/memcached.php'),
-            $configPath . '/migration.php' => app_path('CI/config/migration.php'),
-            $configPath . '/mimes.php' => app_path('CI/config/mimes.php'),
-            $configPath . '/profiler.php' => app_path('CI/config/profiler.php'),
-            $configPath . '/routes.php' => app_path('CI/config/routes.php'),
-            $configPath . '/smileys.php' => app_path('CI/config/smileys.php'),
-            $configPath . '/user_agents.php' => app_path('CI/config/user_agents.php'),
-        ], 'config');
+        $this->publishes([$configPath . '/ci.php' => $this->app->configPath('ci.php')], 'ci');
+//        $this->publishes([
+//            $configPath . '/ci/autoload.php' => app_path('CI/config/autoload.php'),
+//            $configPath . '/ci/config.php' => app_path('CI/config/config.php'),
+//            $configPath . '/ci/constants.php' => app_path('CI/config/constants.php'),
+//            $configPath . '/ci/doctypes.php' => app_path('CI/config/doctypes.php'),
+//            $configPath . '/ci/foreign_chars.php' => app_path('CI/config/foreign_chars.php'),
+//            $configPath . '/ci/hooks.php' => app_path('CI/config/hooks.php'),
+//            $configPath . '/ci/memcached.php' => app_path('CI/config/memcached.php'),
+//            $configPath . '/ci/migration.php' => app_path('CI/config/migration.php'),
+//            $configPath . '/ci/mimes.php' => app_path('CI/config/mimes.php'),
+//            $configPath . '/ci/profiler.php' => app_path('CI/config/profiler.php'),
+//            $configPath . '/ci/routes.php' => app_path('CI/config/routes.php'),
+//            $configPath . '/ci/smileys.php' => app_path('CI/config/smileys.php'),
+//            $configPath . '/ci/user_agents.php' => app_path('CI/config/user_agents.php'),
+//        ], 'config');
 
         Response::macro('append', function ($content) {
             $this->content .= $content;
