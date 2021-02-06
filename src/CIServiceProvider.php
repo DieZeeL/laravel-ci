@@ -7,13 +7,18 @@ use Illuminate\Support\ServiceProvider;
 
 class CIServiceProvider extends ServiceProvider
 {
+
+    protected const CONFIG = __DIR__ . '/../config/ci.php';
+
     /**
      * Booting the package.
      */
     public function boot()
     {
-        $configPath = __DIR__ . '/../config';
-        $this->publishes([$configPath . '/ci.php' => $this->app->configPath('ci.php')], 'ci');
+
+        $this->publishes([static::CONFIG => $this->app->configPath('ci.php')], 'ci');
+
+//        $configPath = __DIR__ . '/../config';
 //        $this->publishes([
 //            $configPath . '/ci/autoload.php' => app_path('CI/config/autoload.php'),
 //            $configPath . '/ci/config.php' => app_path('CI/config/config.php'),
@@ -41,6 +46,7 @@ class CIServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(static::CONFIG, 'ci');
         $this->registerServices();
     }
 
