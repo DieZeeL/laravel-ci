@@ -1025,8 +1025,8 @@ class CI_Loader
         if (ob_get_level() > $this->_ci_ob_level + 1) {
             ob_end_flush();
         } else {
-            //$_ci_CI->output->append_output(ob_get_contents());
-            \Illuminate\Http\Response::append(ob_get_contents());
+            $_ci_CI->output->append_output(ob_get_contents());
+
             @ob_end_clean();
         }
 
