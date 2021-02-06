@@ -180,7 +180,7 @@ class CIController extends BaseController
         if(!$return && $this->output){
             if(config('ci.use_inertia')){
                 return \Inertia\Inertia::render(config('ci.inertia_component','Old'),[
-                    'view' => $this->output
+                    'view' => $this->output->get_output()
                 ]);
             }
             return $this->output->get_output();
