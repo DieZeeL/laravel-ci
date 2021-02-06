@@ -13,7 +13,6 @@ return [
 
     'apppath' => app_path('CI'),
 
-
     'use_inertia' => true,
-
+    'inertia_component' => 'Old'
 ];
