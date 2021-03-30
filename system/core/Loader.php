@@ -506,17 +506,25 @@ class CI_Loader
     /** Load a module view handlebars **/
     public function view_hb($view, $return = false)
     {
-
-        list($path, $_view) = Modules::find($view, $this->_module, 'views/templates/', '.hbs');
-
-        if ($path != false) {
-            $this->_ci_view_paths = array($path => true) + $this->_ci_view_paths;
-            $view = $_view;
+        /** @todo Временный костыль для hbs файлов, потом нужно пофиксить */
+        $_ci_x = explode('/', $view);
+        if (\Nwidart\Modules\Facades\Module::has(ucfirst(reset($_ci_x)))) {
+            $_module = \Nwidart\Modules\Facades\Module::find(ucfirst(array_shift($_ci_x)));
+            $_module_path = $_module->getPath() . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+            $this->_ci_set_view_path($_module_path);
+            $view = implode('/', $_ci_x);
         }
-
         return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => [], '_ci_return' => $return), '.hbs');
     }
 
+    /**
+     * @deprecated
+     * @todo Rewrite to new logic!!!
+     * @param $view
+     * @param  array  $vars
+     * @param  false  $return
+     * @return object
+     */
     function view_xml($view, $vars = array(), $return = false)
     {
         $CI = &get_instance();
@@ -538,6 +546,14 @@ class CI_Loader
         ));
     }
 
+    /**
+     * @deprecated
+     * @todo Rewrite to new logic!!!
+     * @param $view
+     * @param  array  $vars
+     * @param  false  $return
+     * @return object
+     */
     public function ext_view($view, $vars = array(), $return = false)
     {
         $_ci_ext = pathinfo($view, PATHINFO_EXTENSION);
@@ -911,8 +927,14 @@ class CI_Loader
      * @param array $_ci_data Data to load
      * @return    object
      */
-    protected function _ci_load($_ci_data)
+    protected function _ci_load($_ci_data, $ext = '.php')
     {
+        /**
+         * @var $_ci_path
+         * @var $_ci_view
+         * @var $_ci_vars
+         * @var $_ci_return
+         */
         // Set the default data variables
         foreach (array('_ci_view', '_ci_vars', '_ci_path', '_ci_return') as $_ci_val) {
             $$_ci_val = isset($_ci_data[$_ci_val]) ? $_ci_data[$_ci_val] : false;
@@ -926,7 +948,7 @@ class CI_Loader
             $_ci_file = end($_ci_x);
         } else {
             $_ci_ext = pathinfo($_ci_view, PATHINFO_EXTENSION);
-            $_ci_file = ($_ci_ext === '') ? $_ci_view . '.php' : $_ci_view;
+            $_ci_file = ($_ci_ext === '') ? $_ci_view . $ext : $_ci_view;
 
             foreach ($this->_ci_view_paths as $_ci_view_file => $cascade) {
                 if (file_exists($_ci_view_file . $_ci_file)) {
@@ -949,7 +971,7 @@ class CI_Loader
                 $this->_ci_set_view_path($_module_path);
                 $_ci_view = implode('/', $_ci_x);
                 $_ci_ext = pathinfo($_ci_view, PATHINFO_EXTENSION);
-                $_ci_file = ($_ci_ext === '') ? $_ci_view . '.php' : $_ci_view;
+                $_ci_file = ($_ci_ext === '') ? $_ci_view . $ext : $_ci_view;
                 if (file_exists($_module_path . $_ci_file)) {
                     $_ci_path = $_module_path . $_ci_file;
                     $file_exists = true;
