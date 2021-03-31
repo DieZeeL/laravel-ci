@@ -3,11 +3,15 @@
 namespace diezeel\CI;
 
 use BadMethodCallException;
+use Esemve\Hook\Facades\Hook;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Routing\ControllerMiddlewareOptions;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
+use Modules\User\Entities\UserModule;
 use MY_Output;
 use Nwidart\Modules\Facades\Module;
 
@@ -82,6 +86,14 @@ class CIController extends BaseController
         $namespaceArr = explode('\\', $namespace);
         $this->module = Module::find($namespaceArr[1]);
         $this->load->_ci_set_view_path($this->module->getPath() . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'ci_views' . DIRECTORY_SEPARATOR);
+
+        $this->middleware(function ($request, $next) {
+            $this->_initCISession($request);
+            if (method_exists($this, '__ci')) {
+                app()->call([$this,'__ci']);
+            }
+            return $next($request);
+        });
     }
 
     /**
@@ -96,7 +108,7 @@ class CIController extends BaseController
     }
 
     /**
-     * @param object $instance
+     * @param  object  $instance
      */
     public static function setInstance(object $instance): void
     {
@@ -140,8 +152,8 @@ class CIController extends BaseController
     /**
      * Register middleware on the controller.
      *
-     * @param \Closure|array|string $middleware
-     * @param array $options
+     * @param  \Closure|array|string  $middleware
+     * @param  array  $options
      * @return \Illuminate\Routing\ControllerMiddlewareOptions
      */
     public function middleware($middleware, array $options = [])
@@ -169,17 +181,17 @@ class CIController extends BaseController
     /**
      * Execute an action on the controller.
      *
-     * @param string $method
-     * @param array $parameters
+     * @param  string  $method
+     * @param  array  $parameters
      * @return \Inertia\Response
      */
     public function callAction($method, $parameters)
     {
         $return = call_user_func_array([$this, $method], $parameters);
 
-        if(!$return && $this->output){
-            if(config('ci.use_inertia')){
-                return \Inertia\Inertia::render(config('ci.inertia_component','Old'),[
+        if (!$return && $this->output) {
+            if (config('ci.use_inertia')) {
+                return \Inertia\Inertia::render(config('ci.inertia_component', 'Old'), [
                     'view' => $this->output->get_output()
                 ]);
             }
@@ -192,8 +204,8 @@ class CIController extends BaseController
     /**
      * Handle calls to missing methods on the controller.
      *
-     * @param string $method
-     * @param array $parameters
+     * @param  string  $method
+     * @param  array  $parameters
      * @return mixed
      *
      * @throws \BadMethodCallException
@@ -203,5 +215,65 @@ class CIController extends BaseController
         throw new BadMethodCallException(sprintf(
             'Method %s::%s does not exist.', static::class, $method
         ));
+    }
+
+    private function _initCISession($request)
+    {
+        if(!Auth::check()){
+            if($this->session->userdata('user_id')){
+                $this->session->sess_destroy();
+            }
+            return;
+        }
+        $user = Auth::user();
+        if($this->session->userdata('user_id') && $this->session->userdata('user_id') == $user->id){
+            return;
+        }
+        $data = [];
+        switch ($user->user_type) {
+            case "admin":
+                $data = array(
+                    'user_id' => $user->id,
+                    'user_type' => 'admin',
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname,
+                    'rate' => $user->rate,
+                    'user_pic' => $user->picture,
+                    'user_last_login' => $user->last_login,
+                    'user_logged_in' => true,
+                    'worker_type' => $user->worker_type,
+                    'chatusername' => $user->firstname . ' ' . $user->lastname,
+                    'twilio_worker_id' => $user->twilio_worker_id,
+                    'twilio_support' => $user->twilio_support,
+                    'twilio_workspace_id' => $user->twilio_workspace_id,
+                    'system_user' => $user->system_user,
+                    //'username' => $user->id,
+                );
+                break;
+            case "user":
+                /* get user modu;es status*/
+
+                $data = array(
+                    'user_id' => $user->id,
+                    'user_type' => 'user',
+                    'firstname' => $user->firstname,
+                    'lastname' => $user->lastname,
+                    'rate' => $user->rate,
+                    'user_pic' => $user->picture,
+                    'user_last_login' => $user->last_login,
+                    'user_logged_in' => true,
+                    'worker_type' => $user->worker_type,
+                    'chatusername' => $user->firstname . ' ' . $user->lastname,
+                    'twilio_worker_id' => $user->twilio_worker_id,
+                    'twilio_support' => $user->twilio_support,
+                    'twilio_workspace_id' => $user->twilio_workspace_id,
+                    //'username' => $user->id
+                );
+                $data += Hook::get('CIUserAccessModules',[$user],function($user){
+                    return [];
+                });
+                break;
+        };
+        $this->session->set_userdata($data);
     }
 }
