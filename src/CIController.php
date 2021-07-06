@@ -115,7 +115,7 @@ class CIController extends BaseController
         self::$instance = $instance;
     }
 
-    public function response($data = [], $httpCode = 200, $display = false)
+    public function response($data = [], $httpCode = 200, $display = true)
     {
         /** @var MY_Output $output */
         $output = self::$instance->output
@@ -128,7 +128,7 @@ class CIController extends BaseController
         }
     }
 
-    public function errorResponse($error = null, $errors = [], $httpCode = 200, $display = false)
+    public function errorResponse($error = null, $errors = [], $httpCode = 200, $display = true)
     {
         $data['status'] = 'error';
         if ($error !== null) {
@@ -140,7 +140,7 @@ class CIController extends BaseController
         return $this->response($data, $httpCode, $display);
     }
 
-    public function successResponse($data = [], $message = null, $httpCode = 200, $display = false)
+    public function successResponse($data = [], $message = null, $httpCode = 200, $display = true)
     {
         $payload['status'] = 'ok';
         if ($message !== null) {
